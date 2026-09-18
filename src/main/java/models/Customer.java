@@ -1,80 +1,52 @@
 package models;
 
 public class Customer {
-	private int id;
-	private int userId;
-	private String name;
-	private String email;
-	private String address;
-	private String phone;
+    private int id;   // customers.id (own PK)
+    private User user;        // composition: Customer HAS a User (its login account)
+    private String name;
+    private String email;
+    private String phone;
+    private String address;
 
-	public Customer() {
-	}
+    public Customer() {
+        this.user = new User(); // avoid null user by default
+    }
 
-	public Customer(int id, int userId, String name, String email, String address, String phone) {
-		this.id = id;
-		this.userId = userId;
-		this.name = name;
-		this.email = email;
-		this.address = address;
-		this.phone = phone;
-	}
 
-	public Customer(int userId, String name, String email, String address, String phone) {
-		super();
-		this.userId = userId;
-		this.name = name;
-		this.email = email;
-		this.address = address;
-		this.phone = phone;
-	}
+    public Customer(int customerId, User user, String name, String email,
+                     String phoneNumber, String address) {
+        this.id = customerId;
+        this.user = user;
+        this.name = name;
+        this.email = email;
+        this.phone = phoneNumber;
+        this.address = address;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() { return id; }
+    public void setId(int customerId) { this.id = customerId; }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
-	public int getUser() {
-		return userId;
-	}
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-	public void setUser(int userId) {
-		this.userId = userId;
-	}
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-	public String getName() {
-		return name;
-	}
+    public String getPhone() { return phone; }
+    public void setPhone(String phoneNumber) { this.phone = phoneNumber; }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getUsername() { return user.getUsername(); }
+    public void setUsername(String username) { user.setUsername(username); }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getPassword() { return user.getPassword(); }
+    public void setPassword(String password) { user.setPassword(password); }
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
+    public int getUserId() { return user.getId(); }
+    public void setUserId(int userId) { user.setId(userId); }
 }

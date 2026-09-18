@@ -15,31 +15,19 @@
 		<welcome-file>default.xhtml</welcome-file>
 	</welcome-file-list>
 
-
- <!-- Servlet Context 
-	<context-param>
-		<param-name>DBUrl</param-name>
-		<param-value>jdbc:mysql://localhost:3306/ecommerce_db?useSSL=false&amp;serverTimezone=UTC</param-value>
-	</context-param>
-	
-	<context-param>
-		<param-name>DBUser</param-name>
-		<param-value>root</param-value>
-	</context-param>
-
-	<context-param>
-		<param-name>DBPass</param-name>
-		<param-value></param-value>
-	</context-param> -->
-	
-	
-
-	<!-- Database Listener -->
-	<listener>
-		<listener-class>listeners.DBListener</listener-class>
-	</listener>
-	
+<context-param>
+<param-name>db.url</param-name>
+<param-value>jdbc:mysql://localhost:3306/DATABASE_NAME</param-value>
+</context-param>
 
 
+<context-param>
+<param-name>db.user</param-name>
+<param-value>YOUR_USERNAME</param-value>
+
+</context-param><context-param>
+<param-name>db.password</param-name>
+<param-value>YOUR_PASSWORD_HERE</param-value>
+</context-param>
 
 </web-app>

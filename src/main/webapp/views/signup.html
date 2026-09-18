@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sign Up</title>
+</head>
+<body>
+    <main class="container">
+      <section class="form-container">
+        <section class="form-intro">
+          <h1>Create an account</h1>
+          <p class="otherwise">
+            Already have an account?
+            <a href="login.html">Log in</a>
+          </p>
+        </section>
+
+        <div id="serverError" class="error" role="alert"></div>
+
+        <form id="authForm" action="/Veloci/signup" method="POST" novalidate>
+          <div class="name-row">
+            <input
+              class="field-input"
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Name"
+              autocomplete="name"
+              required
+            />
+          </div>
+
+          <input
+            class="field-input"
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Username"
+            autocomplete="username"
+            required
+          />
+
+          <input
+            class="field-input"
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Email"
+            autocomplete="email"
+            required
+          />
+
+          <input
+            class="field-input"
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="Phone number"
+            autocomplete="tel"
+            inputmode="tel"
+            required
+          />
+
+          <input
+            class="field-input"
+            type="text"
+            id="address"
+            name="address"
+            placeholder="Address"
+            autocomplete="street-address"
+            required
+          />
+
+          <input
+            class="field-input"
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Password"
+            autocomplete="new-password"
+            required
+            minlength="6"
+          />
+
+          <div class="send-info">
+            <input
+              type="submit"
+              id="createAccount"
+              value="Create account"
+            />
+          </div>
+        </form>
+      </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Eclipse metadata
+.settings/
+.project
+.classpath
+
+# Compiled classes and build directories
+build/
+target/
+*.class
+
+# OS generated files
+.DS_Store
+Thumbs.db

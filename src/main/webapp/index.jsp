@@ -494,7 +494,7 @@
 
     <div class="nav-actions">
         <a href="cart.jsp" class="cart">Cart (0)</a>
-        <a href="login.jsp" class="login-btn">Login</a>
+        <a href= "<%=  request.getContextPath() + "/views/login.html"%>" class="login-btn">Login</a>
     </div>
 
 </header>

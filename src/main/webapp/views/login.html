@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet"  href="css/style.css">
+    <title>Login</title>
+  </head>
+  <body>
+    <main class="container">
+      <section class="form-container">
+        <section class="form-intro">
+          <h1>Login</h1>
+          <p class="otherwise">
+            Don't have an account? <a href="signup.html">Sign up</a>
+          </p>
+        </section>
+        <div id="serverError" class="error" role="alert"></div>
+        <form id="authForm" novalidate action="/Veloci/login" name="login" method="POST">
+          <input
+            class="field-input"
+            type="text"
+            id="identifier"
+            name="identifier"
+            placeholder="Email or Username"
+            autocomplete="username"
+            required
+          />
+          <input
+            class="field-input"
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+          />
+          <div class="send-info">
+            <input type="submit" id="login" value="Login" />
+          </div>
+        </form>
+      </section>
+    </main>
+    <script src="login.js"></script>
+  </body>
+</html>
