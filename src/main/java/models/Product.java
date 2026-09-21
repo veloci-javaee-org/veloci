@@ -17,7 +17,7 @@ public class Product {
 
 	}
 
-	public Product(int id, String name, float price, int stock, String description, Category category) {
+	public Product(int id, String name, double price, int stock, String description, Category category) {
 		this.id = id;
 		this.name = name;
 		this.price = price;
@@ -47,7 +47,7 @@ public class Product {
 		return price;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 
