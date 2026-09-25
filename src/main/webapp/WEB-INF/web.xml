@@ -17,17 +17,54 @@
 
 <context-param>
 <param-name>db.url</param-name>
-<param-value>jdbc:mysql://localhost:3306/DATABASE_NAME</param-value>
+<param-value>jdbc:mysql://localhost:3306/veloci_db</param-value>
 </context-param>
 
 
 <context-param>
 <param-name>db.user</param-name>
-<param-value>YOUR_USERNAME</param-value>
+<param-value>root</param-value>
 
 </context-param><context-param>
 <param-name>db.password</param-name>
-<param-value>YOUR_PASSWORD_HERE</param-value>
+<param-value>root123</param-value>
 </context-param>
+
+
+
+<!-- start product Servlet mapping -->
+	<servlet>
+        <servlet-name>ProductServlet</servlet-name>
+        <servlet-class>servlet.ProductServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>ProductServlet</servlet-name>
+        <url-pattern>/products</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ProductServlet</servlet-name>
+        <url-pattern>/search</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ProductServlet</servlet-name>
+        <url-pattern>/product-details</url-pattern>
+    </servlet-mapping>
+    
+<!-- end product Servlet mapping -->
+
+
+    <servlet>
+        <servlet-name>TestDB</servlet-name>
+        <servlet-class>servlet.TestDB</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TestDB</servlet-name>
+        <url-pattern>/test-db</url-pattern>
+    </servlet-mapping>
+
+
 
 </web-app>
