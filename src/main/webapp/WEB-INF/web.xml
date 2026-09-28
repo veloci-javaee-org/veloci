@@ -17,7 +17,7 @@
 
 <context-param>
 <param-name>db.url</param-name>
-<param-value>jdbc:mysql://localhost:3306/veloci_db</param-value>
+<param-value>jdbc:mysql://localhost:3306/ecommerce_db</param-value>
 </context-param>
 
 
@@ -27,7 +27,7 @@
 
 </context-param><context-param>
 <param-name>db.password</param-name>
-<param-value>root123</param-value>
+<param-value>admin</param-value>
 </context-param>
 
 

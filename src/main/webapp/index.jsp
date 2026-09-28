@@ -487,7 +487,7 @@
 
     <ul class="nav-links">
         <li><a href="index.jsp">Home</a></li>
-        <li><a href="products.jsp">Shop</a></li>
+        <li><a href="<%=  request.getContextPath() + "/views/products.jsp"%>">Shop</a></li>
         <li><a href="categories.jsp">Categories</a></li>
         <li><a href="orders.jsp">Orders</a></li>
     </ul>
