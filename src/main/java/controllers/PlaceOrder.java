@@ -36,7 +36,7 @@ public class PlaceOrder extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
-		request.setAttribute(LEGACY_DO_HEAD, response)
+		//request.setAttribute(LEGACY_DO_HEAD, response)
 	}
 
 }

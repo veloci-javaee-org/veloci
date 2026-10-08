@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet"  href="css/style.css">
     <title>Login</title>
   </head>
   <body>
@@ -15,7 +14,7 @@
             Don't have an account? <a href="signup.html">Sign up</a>
           </p>
         </section>
-        <div id="serverError" class="error" role="alert"></div>
+        <div id="serverError" class="error" role="alert" style="color:red;"></div>
         <form id="authForm" novalidate action="/Veloci/login" name="login" method="POST">
           <input
             class="field-input"
@@ -41,6 +40,11 @@
         </form>
       </section>
     </main>
-    <script src="login.js"></script>
+    <script>
+  const error = new URLSearchParams(window.location.search).get("error");
+  if (error) {
+    document.getElementById("serverError").textContent = error;
+  }
+</script>
   </body>
 </html>

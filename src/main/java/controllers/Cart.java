@@ -31,19 +31,22 @@ public class Cart extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        // 1. Calculate the total price (this could come from a database or cart object)
-        double totalPrice = 49.99; 
-        
-        // 2. Get the session and save the price
-        Customer omar = new Customer(1,"omar","Omar@gmail.com","12Hassan", "015598121");
+
+        double totalPrice = 49.99;
+
+        Customer omar = new Customer();
+        omar.setId(1);
+        omar.setName("Omar");
+        omar.setEmail("Omar@gmail.com");
+        omar.setPhone("015598121");
+        omar.setAddress("12 Hassan St");
+
         HttpSession session = request.getSession();
         session.setAttribute("totalPrice", totalPrice);
         session.setAttribute("Customer", omar);
-        
-        // 3. Forward the request to the JSP page to display it
+
         request.getRequestDispatcher("cartmock.jsp").forward(request, response);
     }
 

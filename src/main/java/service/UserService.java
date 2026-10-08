@@ -23,7 +23,7 @@ public class UserService {
 
     // Default constructor wires the real JDBC implementations.
     public UserService() {
-        this(new UserDaoImpl(), new CustomerDaoImpl());
+        this(new UserDaoImpl(),new CustomerDaoImpl());
     }
 
     // Constructor injection: lets tests substitute fake/mock DAOs without touching a real DB.

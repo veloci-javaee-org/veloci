@@ -1,6 +1,8 @@
 package servlet;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import dto.LoginRequestDto;
 import enums.RoleEnum;
@@ -51,14 +53,14 @@ public class Login extends HttpServlet {
             
             
             if (RoleEnum.ADMIN.equals(user.getRole())) {
-                response.sendRedirect(request.getContextPath() + "/views/admin_panel");
+                response.sendRedirect(request.getContextPath() + "/views/admin_panel.html");
             } else {
                 response.sendRedirect(request.getContextPath() + "/index.jsp");
             }
 
         } else {
-            request.setAttribute("error", result.getError());
-            request.getRequestDispatcher("/views/login.html").forward(request, response);
+            String msg = URLEncoder.encode(result.getError(), StandardCharsets.UTF_8);
+            response.sendRedirect(request.getContextPath() + "/views/login.html?error=" + msg);
         }
     }
 }

@@ -15,7 +15,7 @@
           </p>
         </section>
 
-        <div id="serverError" class="error" role="alert"></div>
+        <div id="serverError" class="error" role="alert" style="color:red;"></div>
 
         <form id="authForm" action="/Veloci/signup" method="POST" novalidate>
           <div class="name-row">
@@ -92,5 +92,11 @@
         </form>
       </section>
     </main>
+    <script>
+  const error = new URLSearchParams(window.location.search).get("error");
+  if (error) {
+    document.getElementById("serverError").textContent = error;
+  }
+</script>
 </body>
 </html>

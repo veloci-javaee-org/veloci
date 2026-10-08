@@ -1,5 +1,7 @@
 package servlet;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 
 import dto.SignupRequestDto;
@@ -43,8 +45,8 @@ public class Signup extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/views/login.html");
         	
         } else {
-            request.setAttribute("error", error);
-            request.getRequestDispatcher("/views/signup.html").forward(request, response);
+            String msg = URLEncoder.encode(error, StandardCharsets.UTF_8);
+            response.sendRedirect(request.getContextPath() + "/views/signup.html?error=" + msg);
         }
     }
 }
