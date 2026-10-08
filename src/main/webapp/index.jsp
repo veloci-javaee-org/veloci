@@ -79,10 +79,13 @@
             font-size: 14px;
         }
 
-        .login-btn:hover {
-            background: #171717;
-            color: white;
-        }
+        .login-btn:hover { background: #171717; color: white; }
+        .profile-menu { position: relative; }
+        .profile-menu summary { list-style: none; cursor: pointer; }
+        .profile-menu summary::-webkit-details-marker { display: none; }
+        .profile-options { position: absolute; right: 0; top: calc(100% + 10px); z-index: 5; min-width: 165px; padding: 8px; background: #fff; border: 1px solid #eee; border-radius: 9px; box-shadow: 0 8px 24px #0002; }
+        .profile-options a, .profile-options button { display: block; width: 100%; padding: 10px; border: 0; background: none; text-align: left; font: inherit; cursor: pointer; }
+        .profile-options a:hover, .profile-options button:hover { background: #f5f5f2; }
 
         /* ================= HERO ================= */
 
@@ -481,20 +484,21 @@
 
 <header class="navbar">
 
-    <a href="index.jsp" class="logo">
+    <a href="${pageContext.request.contextPath}/index.jsp" class="logo">
         velo<span>ci</span>
     </a>
 
     <ul class="nav-links">
-        <li><a href="index.jsp">Home</a></li>
+        <li><a href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
         <li><a href="<%= request.getContextPath() %>/products">Shop</a></li>
-        <li><a href="categories.jsp">Categories</a></li>
-        <li><a href="orders.jsp">Orders</a></li>
+        <li><a href="${pageContext.request.contextPath}/products">Shop</a></li>
     </ul>
 
     <div class="nav-actions">
-        <a href="cart.jsp" class="cart">Cart (0)</a>
-        <a href= "<%=  request.getContextPath() + "/views/login.html"%>" class="login-btn">Login</a>
+        <% if (session.getAttribute("username") != null) { %>
+        <a href="<%=request.getContextPath()%>/cart" class="cart">Cart</a>
+        <details class="profile-menu"><summary class="login-btn">Profile</summary><div class="profile-options"><a href="<%=request.getContextPath()%>/profile">My profile</a><a href="<%=request.getContextPath()%>/orders">My orders</a><form action="<%=request.getContextPath()%>/logout" method="post"><button type="submit">Log out</button></form></div></details>
+        <% } else { %><a href="<%=request.getContextPath()%>/views/login.html" class="login-btn">Login</a><% } %>
     </div>
 
 </header>
@@ -509,22 +513,21 @@
         <span class="hero-label">Welcome to Veloci</span>
 
         <h1>
-            Shop with
-            <span>speed.</span>
+            Find your
+            <span>style.</span>
         </h1>
 
         <p>
-            Discover products you'll love, enjoy a simple shopping
-            experience, and get everything you need in one place.
+            Discover comfortable everyday clothing, thoughtfully selected for your style.
         </p>
 
         <div class="hero-buttons">
-            <a href="products.jsp" class="primary-btn">
+            <a href="${pageContext.request.contextPath}/products" class="primary-btn">
                 Shop Now
             </a>
 
-            <a href="categories.jsp" class="secondary-btn">
-                Explore Categories
+            <a href="${pageContext.request.contextPath}/products?category=Clothing" class="secondary-btn">
+                Explore Clothing
             </a>
         </div>
 
@@ -553,7 +556,7 @@
             <p>Find exactly what you're looking for.</p>
         </div>
 
-        <a href="categories.jsp" class="view-all">
+        <a href="${pageContext.request.contextPath}/products" class="view-all">
             View all
         </a>
 
@@ -561,28 +564,28 @@
 
     <div class="categories">
 
-        <a href="products.jsp?category=electronics" class="category">
+        <a href="${pageContext.request.contextPath}/products" class="category">
             <span class="category-number">01</span>
-            <h3>Electronics</h3>
-            <p>Tech & gadgets</p>
+            <h3>Everyday wear</h3>
+            <p>Comfortable essentials</p>
         </a>
 
-        <a href="products.jsp?category=clothing" class="category">
+        <a href="${pageContext.request.contextPath}/products?category=Clothing" class="category">
             <span class="category-number">02</span>
             <h3>Clothing</h3>
             <p>Style & essentials</p>
         </a>
 
-        <a href="products.jsp?category=books" class="category">
+        <a href="${pageContext.request.contextPath}/products?category=Clothing" class="category">
             <span class="category-number">03</span>
-            <h3>Books</h3>
-            <p>Read & discover</p>
+            <h3>New arrivals</h3>
+            <p>Fresh seasonal styles</p>
         </a>
 
-        <a href="products.jsp?category=accessories" class="category">
+        <a href="${pageContext.request.contextPath}/products?category=Clothing" class="category">
             <span class="category-number">04</span>
-            <h3>Accessories</h3>
-            <p>Complete your style</p>
+            <h3>Wardrobe staples</h3>
+            <p>Pieces for every day</p>
         </a>
 
     </div>
@@ -591,157 +594,14 @@
 
 
 <!-- ================= FEATURED PRODUCTS ================= -->
-
 <section class="section" style="padding-top: 10px;">
-
     <div class="section-header">
-
-        <div>
-            <h2>Featured products</h2>
-            <p>A few things we think you'll like.</p>
-        </div>
-
-        <a href="products.jsp" class="view-all">
-            View all
-        </a>
-
+        <div><h2>Made for everyday</h2><p>Explore comfortable clothing for your everyday wardrobe.</p></div>
+        <a href="${pageContext.request.contextPath}/products" class="view-all">Browse clothing</a>
     </div>
-
     <div class="products">
-
-        <div class="product-card">
-
-            <div class="product-image">
-                Product Image
-            </div>
-
-            <div class="product-info">
-
-                <span class="product-category">
-                    Electronics
-                </span>
-
-                <h3 class="product-name">
-                    Wireless Headphones
-                </h3>
-
-                <div class="product-bottom">
-
-                    <span class="price">
-                        $129.99
-                    </span>
-
-                    <a href="product-details.jsp?id=1" class="add-btn">
-                        View
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="product-card">
-
-            <div class="product-image">
-                Product Image
-            </div>
-
-            <div class="product-info">
-
-                <span class="product-category">
-                    Electronics
-                </span>
-
-                <h3 class="product-name">
-                    Smart Watch
-                </h3>
-
-                <div class="product-bottom">
-
-                    <span class="price">
-                        $199.99
-                    </span>
-
-                    <a href="product-details.jsp?id=2" class="add-btn">
-                        View
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="product-card">
-
-            <div class="product-image">
-                Product Image
-            </div>
-
-            <div class="product-info">
-
-                <span class="product-category">
-                    Accessories
-                </span>
-
-                <h3 class="product-name">
-                    Leather Backpack
-                </h3>
-
-                <div class="product-bottom">
-
-                    <span class="price">
-                        $79.99
-                    </span>
-
-                    <a href="product-details.jsp?id=3" class="add-btn">
-                        View
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="product-card">
-
-            <div class="product-image">
-                Product Image
-            </div>
-
-            <div class="product-info">
-
-                <span class="product-category">
-                    Clothing
-                </span>
-
-                <h3 class="product-name">
-                    Classic Jacket
-                </h3>
-
-                <div class="product-bottom">
-
-                    <span class="price">
-                        $89.99
-                    </span>
-
-                    <a href="product-details.jsp?id=4" class="add-btn">
-                        View
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
+        <a class="product-card" href="${pageContext.request.contextPath}/products?category=Clothing"><div class="product-image">Clothing</div><div class="product-info"><span class="product-category">The collection</span><h3 class="product-name">Everyday essentials</h3><span class="add-btn">Shop clothing</span></div></a>
     </div>
-
 </section>
 
 
@@ -754,7 +614,7 @@
         <p>Explore our collection and start shopping today.</p>
     </div>
 
-    <a href="products.jsp" class="banner-btn">
+    <a href="${pageContext.request.contextPath}/products" class="banner-btn">
         Start Shopping
     </a>
 
@@ -781,9 +641,9 @@
 
             <h4>Shop</h4>
 
-            <a href="products.jsp">All Products</a>
-            <a href="categories.jsp">Categories</a>
-            <a href="cart.jsp">Cart</a>
+            <a href="${pageContext.request.contextPath}/products">All Products</a>
+            <a href="${pageContext.request.contextPath}/products">Categories</a>
+            <a href="${pageContext.request.contextPath}/cart">Cart</a>
 
         </div>
 
@@ -791,9 +651,9 @@
 
             <h4>Account</h4>
 
-            <a href="login.jsp">Login</a>
-            <a href="register.jsp">Create Account</a>
-            <a href="orders.jsp">My Orders</a>
+            <a href="${pageContext.request.contextPath}/views/login.html">Login</a>
+            <a href="${pageContext.request.contextPath}/views/signup.html">Create Account</a>
+            <a href="${pageContext.request.contextPath}/orders">My Orders</a>
 
         </div>
 

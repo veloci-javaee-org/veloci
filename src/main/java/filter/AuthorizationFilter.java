@@ -24,10 +24,10 @@ public class AuthorizationFilter implements Filter {
 
     // Pages reachable without being logged in at all.
 	private static final Set<String> PUBLIC_PATHS = Set.of(
-		    "/", "/index.html",
+		    "/", "/index.html", "/index.jsp",
 		    "/views/login.html", "/login",
 		    "/views/signup.html", "/signup",
-		    "/views/unauthorized.html"
+		    "/views/unauthorized.html", "/products", "/search", "/product-details"
 		);
 
     // Path prefixes that don't need auth checks at all (static assets).

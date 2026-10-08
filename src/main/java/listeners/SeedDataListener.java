@@ -90,18 +90,19 @@ public class SeedDataListener implements ServletContextListener {
     }
 
     private void seedProducts(Connection conn) throws SQLException {
-        if (rowCount(conn, "products") > 0) return;
-
-        int electronics = categoryIdByName(conn, "Electronics");
-        int clothing    = categoryIdByName(conn, "Clothing");
-        int appliances  = categoryIdByName(conn, "Home Appliances");
-
+        int clothing = categoryIdByName(conn, "Clothing");
         String sql = "INSERT INTO products (name, price, stock, description, category_id) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            insertProduct(ps, "Samsung Galaxy A54", 12000.00, 15, "Latest mid-range smartphone with great camera", electronics);
-            insertProduct(ps, "Egyptian Cotton T-Shirt", 350.00, 50, "100% authentic premium Egyptian cotton, white", clothing);
-            insertProduct(ps, "Philips Air Fryer", 3500.00, 8, "Healthy cooking with little to no oil, 4.1L capacity", appliances);
+            addProductIfMissing(conn, ps, "Egyptian Cotton T-Shirt", 350.00, 50, "100% authentic premium Egyptian cotton, white", clothing);
+            addProductIfMissing(conn, ps, "Everyday Cotton Shirt", 620.00, 30, "A versatile breathable shirt for everyday wear", clothing);
+            addProductIfMissing(conn, ps, "Classic Denim Jacket", 1450.00, 20, "A timeless denim layer with a comfortable fit", clothing);
+            addProductIfMissing(conn, ps, "Relaxed Fit Trousers", 890.00, 25, "Soft, easy to style trousers with a relaxed fit", clothing);
         }
+    }
+
+    private void addProductIfMissing(Connection conn, PreparedStatement ps, String name, double price, int stock, String description, int categoryId) throws SQLException {
+        if (productIdByName(conn, name) > 0) return;
+        insertProduct(ps, name, price, stock, description, categoryId);
     }
 
     private void insertProduct(PreparedStatement ps, String n, double p, int s, String d, int cid) throws SQLException {
@@ -110,18 +111,18 @@ public class SeedDataListener implements ServletContextListener {
     }
 
     private void seedProductImages(Connection conn) throws SQLException {
-        if (rowCount(conn, "product_images") > 0) return;
-        String sql = "INSERT INTO product_images (product_id, image_path) VALUES (?, ?)";
+        String sql = "INSERT INTO product_images (product_id, image_path) SELECT ?, ? WHERE NOT EXISTS (SELECT 1 FROM product_images WHERE product_id = ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            linkImage(ps, conn, "Samsung Galaxy A54", "/images/products/phone.jpg");
             linkImage(ps, conn, "Egyptian Cotton T-Shirt", "/images/products/tshirt.jpg");
-            linkImage(ps, conn, "Philips Air Fryer", "/images/products/airfryer.jpg");
+            linkImage(ps, conn, "Everyday Cotton Shirt", "/images/products/tshirt.jpg");
+            linkImage(ps, conn, "Classic Denim Jacket", "/images/products/tshirt.jpg");
+            linkImage(ps, conn, "Relaxed Fit Trousers", "/images/products/tshirt.jpg");
         }
     }
 
     private void linkImage(PreparedStatement ps, Connection conn, String productName, String path) throws SQLException {
         int pid = productIdByName(conn, productName);
-        ps.setInt(1, pid); ps.setString(2, path);
+        ps.setInt(1, pid); ps.setString(2, path); ps.setInt(3, pid);
         ps.executeUpdate();
     }
 
@@ -137,21 +138,21 @@ public class SeedDataListener implements ServletContextListener {
     private int userIdByUsername(Connection conn, String username) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("SELECT id FROM users WHERE username = ?")) {
             ps.setString(1, username);
-            try (ResultSet rs = ps.executeQuery()) { rs.next(); return rs.getInt(1); }
+            try (ResultSet rs = ps.executeQuery()) { return rs.next() ? rs.getInt(1) : 0; }
         }
     }
 
     private int categoryIdByName(Connection conn, String name) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("SELECT id FROM categories WHERE name = ?")) {
             ps.setString(1, name);
-            try (ResultSet rs = ps.executeQuery()) { rs.next(); return rs.getInt(1); }
+            try (ResultSet rs = ps.executeQuery()) { return rs.next() ? rs.getInt(1) : 0; }
         }
     }
 
     private int productIdByName(Connection conn, String name) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("SELECT id FROM products WHERE name = ?")) {
             ps.setString(1, name);
-            try (ResultSet rs = ps.executeQuery()) { rs.next(); return rs.getInt(1); }
+            try (ResultSet rs = ps.executeQuery()) { return rs.next() ? rs.getInt(1) : 0; }
         }
     }
 }
