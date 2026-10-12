@@ -27,7 +27,7 @@
 
 </context-param><context-param>
 <param-name>db.password</param-name>
-<param-value>admin</param-value>
+<param-value></param-value>
 </context-param>
 
 
