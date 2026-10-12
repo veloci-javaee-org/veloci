@@ -53,7 +53,7 @@ public class Login extends HttpServlet {
             
             
             if (RoleEnum.ADMIN.equals(user.getRole())) {
-                response.sendRedirect(request.getContextPath() + "/views/admin_panel.html");
+                response.sendRedirect(request.getContextPath() + "/views/admin.jsp");
             } else {
                 response.sendRedirect(request.getContextPath() + "/index.jsp");
             }
