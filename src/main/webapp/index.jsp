@@ -496,7 +496,7 @@
 
     <div class="nav-actions">
         <% if (session.getAttribute("username") != null) { %>
-        <a href="<%=request.getContextPath()%>/cart" class="cart">Cart</a>
+        <a href="<%=request.getContextPath()%>/cart" class="cart" data-cart-open>Cart<span class="vc-badge" data-cart-count></span></a>
         <details class="profile-menu"><summary class="login-btn">Profile</summary><div class="profile-options"><a href="<%=request.getContextPath()%>/profile">My profile</a><a href="<%=request.getContextPath()%>/orders">My orders</a><form action="<%=request.getContextPath()%>/logout" method="post"><button type="submit">Log out</button></form></div></details>
         <% } else { %><a href="<%=request.getContextPath()%>/views/login.html" class="login-btn">Login</a><% } %>
     </div>
@@ -664,6 +664,8 @@
 <div class="copyright">
     © 2026 Veloci. All rights reserved.
 </div>
+
+<jsp:include page="/views/cart-drawer.jsp"/>
 
 </body>
 
