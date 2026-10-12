@@ -14,36 +14,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-/**
- * Central authorization checkpoint. Runs on every request, before any
- * servlet, so access rules live in exactly one place instead of being
- * duplicated (and potentially forgotten) across individual servlets.
- */
 @WebFilter("/*")
 public class AuthorizationFilter implements Filter {
 
-    // Pages reachable without being logged in at all.
-	private static final Set<String> PUBLIC_PATHS = Set.of(
-		    "/", "/index.html", "/index.jsp",
-		    "/views/login.html", "/login",
-		    "/views/signup.html", "/signup",
-		    "/views/unauthorized.html", "/products", "/search", "/product-details"
-		);
+    private static final Set<String> PUBLIC_PATHS = Set.of(
+            "/", "/index.html", "/index.jsp",
+            "/views/login.html", "/login",
+            "/views/signup.html", "/signup",
+            "/views/unauthorized.html", "/unauthorized.html",
+            "/products", "/search", "/product-details");
 
-    // Path prefixes that don't need auth checks at all (static assets).
     private static final Set<String> PUBLIC_PREFIXES = Set.of(
-        "/css/", "/js/", "/images/"
-    );
+            "/css/", "/js/", "/images/");
 
-    // Only ADMIN may reach these.
-    private static final Set<String> ADMIN_ONLY_PATHS = Set.of(
-        "/admin_panel"
-    );
-
-    // Only CUSTOMER may reach these (admins are blocked, per your requirement).
     private static final Set<String> CUSTOMER_ONLY_PATHS = Set.of(
-        "/customer_profile"
-    );
+            "/profile", "/orders");
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
@@ -57,11 +42,6 @@ public class AuthorizationFilter implements Filter {
             path = "/";
         }
 
-        System.out.println("[AuthorizationFilter] path=" + path
-                + " session=" + (request.getSession(false) != null)
-                + " role=" + (request.getSession(false) != null ? request.getSession(false).getAttribute("role") : "null"));
-
-        // Static assets and explicitly public pages pass straight through.
         if (PUBLIC_PATHS.contains(path) || startsWithAny(path, PUBLIC_PREFIXES)) {
             chain.doFilter(req, res);
             return;
@@ -69,17 +49,14 @@ public class AuthorizationFilter implements Filter {
 
         HttpSession session = request.getSession(false);
         boolean loggedIn = session != null && session.getAttribute("username") != null;
-
-        // Not logged in at all -> send to login, not the 403 page.
-        // (403 is reserved for "you're logged in, but not allowed here".)
         if (!loggedIn) {
             response.sendRedirect(request.getContextPath() + "/views/login.html");
             return;
         }
 
-        RoleEnum role = (RoleEnum) session.getAttribute("role");
-
-        if (ADMIN_ONLY_PATHS.contains(path) && !RoleEnum.ADMIN.equals(role)) {
+        Object role = session.getAttribute("role");
+        boolean adminPath = "/admin".equals(path) || path.startsWith("/admin/");
+        if (adminPath && !RoleEnum.ADMIN.equals(role)) {
             forbidden(request, response);
             return;
         }

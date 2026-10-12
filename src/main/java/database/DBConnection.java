@@ -28,7 +28,8 @@ public class DBConnection {
         // JDBC 4's automatic ServiceLoader discovery, which can occasionally
         // fail to trigger depending on the servlet container's classloader setup.
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+//            Class.forName("com.mysql.cj.jdbc.Driver");
+        	  Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
             throw new IllegalStateException(
                 "MySQL JDBC driver class not found on classpath. Check that mysql-connector-j's jar is in WEB-INF/lib.", e);
