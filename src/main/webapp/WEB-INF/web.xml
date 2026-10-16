@@ -15,22 +15,19 @@
 		<welcome-file>default.xhtml</welcome-file>
 	</welcome-file-list>
 
-	<context-param>
-		<param-name>db.url</param-name>
-		<!-- <param-value>jdbc:mysql://localhost:3306/ecommerce_db</param-value> -->
-		<param-value>jdbc:postgresql://localhost:5432/ecommerce_db</param-value>
+		<context-param>
+	<param-name>db.url</param-name>
+	<param-value>jdbc:mysql://localhost:3306/ecommerce_db</param-value>
 	</context-param>
 
-	<context-param>
-		<param-name>db.user</param-name>
-		<!-- <param-value>root</param-value> -->
-		<param-value>postgres</param-value>
-	</context-param>
 
 	<context-param>
-		<param-name>db.password</param-name>
-		<!-- <param-value></param-value> -->
-		<param-value>abdo@26016</param-value>
+	<param-name>db.user</param-name>
+	<param-value>root</param-value>
+
+	</context-param><context-param>
+	<param-name>db.password</param-name>
+	<param-value>Password22@</param-value>
 	</context-param>
 
 

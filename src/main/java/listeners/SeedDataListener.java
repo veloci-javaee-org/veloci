@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import database.DBConnection;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
@@ -17,49 +18,64 @@ public class SeedDataListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
+        ServletContext context = event.getServletContext();
         try (Connection conn = DBConnection.getConnection()) {
             conn.setAutoCommit(false);
             try {
-                seedUsers(conn);
-                seedCustomers(conn);
-                seedCategories(conn);
-                seedProducts(conn);
-                seedProductImages(conn);
+                context.log("Starting database seeding process...");
+                
+                seedUsers(conn, context);
+                seedCustomers(conn, context);
+                seedCategories(conn, context);
+                seedProducts(conn, context);
+                seedProductImages(conn, context);
+                
                 conn.commit();
-                event.getServletContext().log("Seed check complete.");
+                context.log("Seed check complete. All data successfully committed.");
             } catch (SQLException e) {
                 conn.rollback();
-                event.getServletContext().log("Seed failed, rolled back.", e);
+                context.log("Seed failed during transaction. Rolled back changes.", e);
+                context.log("SQL State: " + e.getSQLState() + " | Error Code: " + e.getErrorCode() + " | Message: " + e.getMessage());
             }
         } catch (SQLException e) {
-            event.getServletContext().log("Seed could not connect.", e);
+            context.log("Seed could not establish a database connection.", e);
         }
     }
 
-    private void seedUsers(Connection conn) throws SQLException {
-        if (rowCount(conn, "users") > 0) return;
+    private void seedUsers(Connection conn, ServletContext context) throws SQLException {
+        if (rowCount(conn, "users") > 0) {
+            context.log("Users table already populated. Skipping user seed.");
+            return;
+        }
 
         String sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             insertUser(ps, "admin", "admin123", "ADMIN");
             insertUser(ps, "ahmed.ali", "password123", "CUSTOMER");
             insertUser(ps, "sara.mohamed", "password123", "CUSTOMER");
+            context.log("Users seeded successfully.");
         }
     }
 
     private void insertUser(PreparedStatement ps, String u, String raw, String role) throws SQLException {
         ps.setString(1, u);
-        ps.setString(2, PasswordHasher.hash(raw)); // ✅ store hashed, matches login
+        ps.setString(2, PasswordHasher.hash(raw));
         ps.setString(3, role);
         ps.executeUpdate();
     }
 
-    private void seedCustomers(Connection conn) throws SQLException {
-        if (rowCount(conn, "customers") > 0) return;
+    private void seedCustomers(Connection conn, ServletContext context) throws SQLException {
+        if (rowCount(conn, "customers") > 0) {
+            context.log("Customers table already populated. Skipping customer seed.");
+            return;
+        }
 
-        // look up user ids by username so this survives a fresh DB with different auto-increment
         int ahmedId = userIdByUsername(conn, "ahmed.ali");
         int saraId  = userIdByUsername(conn, "sara.mohamed");
+
+        if (ahmedId == 0 || saraId == 0) {
+            throw new SQLException("Failed to resolve user IDs for customer seeding. Users may not have been inserted properly.");
+        }
 
         String sql = "INSERT INTO customers (user_id, name, email, address, phone) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -76,27 +92,32 @@ public class SeedDataListener implements ServletContextListener {
             ps.setString(4, "42 Corniche El Nil, Alexandria, Egypt");
             ps.setString(5, "01198765432");
             ps.executeUpdate();
+            context.log("Customers seeded successfully.");
         }
     }
 
-    private void seedCategories(Connection conn) throws SQLException {
+    private void seedCategories(Connection conn, ServletContext context) throws SQLException {
         if (rowCount(conn, "categories") > 0) return;
         String sql = "INSERT INTO categories (name, description) VALUES (?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, "Electronics");      ps.setString(2, "Gadgets, phones, and devices"); ps.executeUpdate();
-            ps.setString(1, "Clothing");         ps.setString(2, "Fashion and Egyptian cotton apparel"); ps.executeUpdate();
+            ps.setString(1, "Clothing");           ps.setString(2, "Fashion and Egyptian cotton apparel"); ps.executeUpdate();
             ps.setString(1, "Home Appliances");  ps.setString(2, "Kitchen and home essentials"); ps.executeUpdate();
+            context.log("Categories seeded successfully.");
         }
     }
 
-    private void seedProducts(Connection conn) throws SQLException {
+    private void seedProducts(Connection conn, ServletContext context) throws SQLException {
         int clothing = categoryIdByName(conn, "Clothing");
+        if (clothing == 0) return;
+        
         String sql = "INSERT INTO products (name, price, stock, description, category_id) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             addProductIfMissing(conn, ps, "Egyptian Cotton T-Shirt", 350.00, 50, "100% authentic premium Egyptian cotton, white", clothing);
             addProductIfMissing(conn, ps, "Everyday Cotton Shirt", 620.00, 30, "A versatile breathable shirt for everyday wear", clothing);
             addProductIfMissing(conn, ps, "Classic Denim Jacket", 1450.00, 20, "A timeless denim layer with a comfortable fit", clothing);
             addProductIfMissing(conn, ps, "Relaxed Fit Trousers", 890.00, 25, "Soft, easy to style trousers with a relaxed fit", clothing);
+            context.log("Products seeded successfully.");
         }
     }
 
@@ -110,20 +131,23 @@ public class SeedDataListener implements ServletContextListener {
         ps.executeUpdate();
     }
 
-    private void seedProductImages(Connection conn) throws SQLException {
+    private void seedProductImages(Connection conn, ServletContext context) throws SQLException {
         String sql = "INSERT INTO product_images (product_id, image_path) SELECT ?, ? WHERE NOT EXISTS (SELECT 1 FROM product_images WHERE product_id = ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             linkImage(ps, conn, "Egyptian Cotton T-Shirt", "/images/products/tshirt.jpg");
             linkImage(ps, conn, "Everyday Cotton Shirt", "/images/products/tshirt.jpg");
             linkImage(ps, conn, "Classic Denim Jacket", "/images/products/tshirt.jpg");
             linkImage(ps, conn, "Relaxed Fit Trousers", "/images/products/tshirt.jpg");
+            context.log("Product images seeded successfully.");
         }
     }
 
     private void linkImage(PreparedStatement ps, Connection conn, String productName, String path) throws SQLException {
         int pid = productIdByName(conn, productName);
-        ps.setInt(1, pid); ps.setString(2, path); ps.setInt(3, pid);
-        ps.executeUpdate();
+        if (pid > 0) {
+            ps.setInt(1, pid); ps.setString(2, path); ps.setInt(3, pid);
+            ps.executeUpdate();
+        }
     }
 
     // ---- helpers ----
