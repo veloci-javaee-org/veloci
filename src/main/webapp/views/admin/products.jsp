@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products — Admin | Veloci</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:Arial,Helvetica,sans-serif;color:#171717;background:#f7f7f5;min-height:100vh}
@@ -59,7 +60,7 @@
         .stat-value{font-size:30px;font-weight:800;letter-spacing:-1px}
 
         /* TABLE */
-        .table-wrap{background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden}
+        .table-wrap{background:#fff;border:1px solid #eee;border-radius:12px;overflow-x:auto}
         .table-toolbar{padding:16px 22px;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between}
         .table-toolbar span{font-size:13px;color:#999}
         table{width:100%;border-collapse:collapse}
@@ -92,12 +93,10 @@
 <body>
 
 <header class="navbar">
-    <a href="${pageContext.request.contextPath}/index.jsp" class="logo">velo<span>ci</span></a>
+    <a href="${pageContext.request.contextPath}/admin" class="logo">velo<span>ci</span></a>
     <ul class="nav-links">
         <li><a href="${pageContext.request.contextPath}/admin/products" class="active">Products</a></li>
         <li><a href="${pageContext.request.contextPath}/admin/categories">Categories</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/customers">Customers</a></li>
     </ul>
     <span class="admin-badge">Admin</span>
 </header>
@@ -137,11 +136,11 @@
         </form>
     </div>
 
-    <div class="table-wrap">
+    <div class="table-wrap table-responsive">
         <div class="table-toolbar">
             <span>${products.size()} products${not empty keyword ? ' matching "'.concat(keyword).concat('"') : ''}</span>
         </div>
-        <table>
+        <table class="table align-middle mb-0">
             <thead>
                 <tr>
                     <th>Image</th>
@@ -200,9 +199,12 @@
                                        href="${pageContext.request.contextPath}/admin/products?action=edit&id=${p.id}">Edit</a>
                                     <a class="btn btn-sm btn-stock"
                                        href="${pageContext.request.contextPath}/admin/products?action=stock&id=${p.id}">Stock</a>
-                                    <a class="btn btn-sm btn-danger"
-                                       href="${pageContext.request.contextPath}/admin/products?action=delete&id=${p.id}"
-                                       onclick="return confirm('Delete \'${p.name}\'?\nThis will also remove all its images.');">Delete</a>
+                                    <form action="${pageContext.request.contextPath}/admin/products" method="post"
+                                          onsubmit="return confirm('Delete this product? This will also remove its images.');">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="id" value="${p.id}">
+                                        <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

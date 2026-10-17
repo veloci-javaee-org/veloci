@@ -25,7 +25,17 @@ public class Login extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.getRequestDispatcher("/views/login.html").forward(request, response);
+		HttpSession session = request.getSession(false);
+		if (session != null && session.getAttribute("username") != null) {
+			Object role = session.getAttribute("role");
+			if (RoleEnum.ADMIN.equals(role)) {
+				response.sendRedirect(request.getContextPath() + "/admin");
+			} else {
+				response.sendRedirect(request.getContextPath() + "/products");
+			}
+			return;
+		}
+		request.getRequestDispatcher("/views/login.jsp").forward(request, response);
 	}
 
 	@Override
@@ -39,10 +49,11 @@ public class Login extends HttpServlet {
 		if (result.isSuccess()) {
 			AuthenticatedUser user = result.getUser();
 
+			HttpSession previousSession = request.getSession(false);
+			if (previousSession != null) {
+				previousSession.invalidate();
+			}
 			HttpSession session = request.getSession(true);
-
-			// These data of AuthenticatedUser will be used through the app to authorized
-			// the us
 			session.setAttribute("username", user.getUsername());
 			session.setAttribute("name", user.getName());
 			session.setAttribute("email", user.getEmail());
@@ -57,7 +68,7 @@ public class Login extends HttpServlet {
 
 		} else {
 			String msg = URLEncoder.encode(result.getError(), StandardCharsets.UTF_8);
-			response.sendRedirect(request.getContextPath() + "/views/login.html?error=" + msg);
+			response.sendRedirect(request.getContextPath() + "/login?error=" + msg);
 		}
 	}
 }

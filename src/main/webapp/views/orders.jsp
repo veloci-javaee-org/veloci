@@ -1,1 +1,27 @@
-<%@ page contentType="text/html;charset=UTF-8" %><!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><title>My Orders | Veloci</title><style>*{box-sizing:border-box}body{margin:0;background:#f7f7f5;color:#171717;font:16px Arial}.bar{padding:22px 7%;background:#fff;border-bottom:1px solid #eee;display:flex;justify-content:space-between}.brand{font-size:26px;font-weight:bold;text-decoration:none;color:inherit}.wrap{max-width:760px;margin:50px auto;padding:34px;background:white;border:1px solid #eee;border-radius:14px}.wrap h1{font-size:36px;margin:0 0 14px}.wrap p{color:#666;line-height:1.6}.button{display:inline-block;margin-top:12px;padding:12px 18px;background:#171717;border-radius:7px;color:white;text-decoration:none}</style></head><body><header class="bar"><a class="brand" href="${pageContext.request.contextPath}/index.jsp">veloci</a><a href="${pageContext.request.contextPath}/profile">My profile</a></header><main class="wrap"><h1>My orders</h1><p>${param.checkout == 'unavailable' ? 'Checkout is not configured yet. Your cart has been kept.' : 'Your order history will appear here after completed orders.'}</p><a class="button" href="${pageContext.request.contextPath}/products">Browse clothing</a></main></body></html>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>My Orders | Veloci</title>
+    <style>body{background:#f7f7f5;color:#171717}.brand{color:inherit;font-size:1.6rem;font-weight:800;text-decoration:none}.panel{max-width:760px;border:1px solid #eee;border-radius:14px}</style>
+</head>
+<body>
+    <header class="bg-white border-bottom">
+        <nav class="container py-3 d-flex justify-content-between align-items-center" aria-label="Main navigation">
+            <a class="brand" href="${pageContext.request.contextPath}/home">velo<span class="fw-normal">ci</span></a>
+            <a href="${pageContext.request.contextPath}/profile">My profile</a>
+        </nav>
+    </header>
+    <main class="container py-5">
+        <section class="panel bg-white p-4 p-md-5 mx-auto">
+            <h1 class="h2 mb-3">My orders</h1>
+            <p class="text-secondary"><c:choose><c:when test="${param.checkout == 'unavailable'}">Checkout is not configured yet. Your cart has been kept.</c:when><c:otherwise>Your order history will appear here after completed orders.</c:otherwise></c:choose></p>
+            <a class="btn btn-dark mt-2" href="${pageContext.request.contextPath}/products">Browse products</a>
+        </section>
+    </main>
+</body>
+</html>

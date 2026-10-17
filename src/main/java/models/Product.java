@@ -11,7 +11,7 @@ public class Product {
 	private int stock;
 	private String description;
 	private Category category;
-	private List<ProductImage> images;
+	private List<ProductImage> images  = new ArrayList<>();
 
 	public Product() {
 

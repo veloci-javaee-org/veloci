@@ -34,9 +34,6 @@ public class ProductServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-//		response.getWriter().append("Served at: ").append(request.getContextPath());
-
 		String path = request.getServletPath();
 
 		if ("/product-details".equals(path)) {
@@ -88,29 +85,32 @@ public class ProductServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String idParam = request.getParameter("id");
 		if (idParam == null || idParam.trim().isEmpty()) {
-			response.sendRedirect(request.getContextPath() + "/products");
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
 
 		try {
 			int id = Integer.parseInt(idParam);
+			if (id <= 0) {
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+				return;
+			}
 			Product product = productDAO.getProductById(id);
 
 			if (product != null) {
 				request.setAttribute("product", product);
 				request.getRequestDispatcher("/views/product-details.jsp").forward(request, response);
 			} else {
-				response.sendRedirect(request.getContextPath() + "/products");
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			}
 		} catch (NumberFormatException e) {
-			response.sendRedirect(request.getContextPath() + "/products");
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		doGet(request, response);
+		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 	}
 
 }

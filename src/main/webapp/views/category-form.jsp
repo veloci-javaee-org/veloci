@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 <title><c:choose>
 		<c:when test="${not empty category && category.id != 0}">Edit Category</c:when>
 		<c:otherwise>Add Category</c:otherwise>
@@ -342,7 +343,7 @@ textarea {
 
 	<!-- NAVBAR -->
 	<header class="navbar">
-		<a href="${pageContext.request.contextPath}/index.jsp" class="logo">velo<span>ci</span></a>
+		<a href="${pageContext.request.contextPath}/admin" class="logo">velo<span>ci</span></a>
 		<ul class="nav-links">
 			<li><a href="${pageContext.request.contextPath}/admin">Dashboard</a></li>
 			<li><a

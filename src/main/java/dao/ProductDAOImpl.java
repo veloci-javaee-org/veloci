@@ -31,7 +31,8 @@ public class ProductDAOImpl implements ProductDAO {
 			while (rs.next())
 				products.add(mapToProductWithImg(rs));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Could not load products.", e);
+			throw new IllegalStateException("Could not load products.", e);
 		}
 		return products;
 	}
@@ -50,7 +51,8 @@ public class ProductDAOImpl implements ProductDAO {
 					products.add(mapToProductWithImg(rs));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Could not search products.", e);
+			throw new IllegalStateException("Could not search products.", e);
 		}
 		return products;
 	}
@@ -71,14 +73,15 @@ public class ProductDAOImpl implements ProductDAO {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Could not load product " + id, e);
+			throw new IllegalStateException("Could not load product.", e);
 		}
 		return null;
 	}
 
 	// Admin CRUD
 	@Override
-	public int insertProduct(Product product) {
+	public int insertProduct(Product product) throws SQLException {
 		String sql = "insert into products (name, price, stock, description, category_id) values (?,?,?,?,?)";
 		try (Connection conn = DBConnection.getConnection();
 				PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -95,14 +98,15 @@ public class ProductDAOImpl implements ProductDAO {
 				if (keys.next())
 					return keys.getInt(1);
 			}
+			throw new SQLException("Product insert did not return a generated id.");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Could not insert product.", e);
+			throw e;
 		}
-		return -1;
 	}
 
 	@Override
-	public void updateProduct(Product product) {
+	public boolean updateProduct(Product product) throws SQLException {
 		String sql = "update products set name=?, price=?, stock=?, description=?, category_id=? where id=?";
 		try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setString(1, product.getName());
@@ -114,33 +118,36 @@ public class ProductDAOImpl implements ProductDAO {
 			else
 				stmt.setNull(5, java.sql.Types.INTEGER);
 			stmt.setInt(6, product.getId());
-			stmt.executeUpdate();
+			return stmt.executeUpdate() == 1;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Could not update product " + product.getId(), e);
+			throw e;
 		}
 	}
 
 	@Override
-	public void updateStock(int productId, int newStock) {
+	public boolean updateStock(int productId, int newStock) throws SQLException {
 		String sql = "update products set stock = ? where id = ?";
 		try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setInt(1, newStock);
 			stmt.setInt(2, productId);
-			stmt.executeUpdate();
+			return stmt.executeUpdate() == 1;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Could not update stock for product " + productId, e);
+			throw e;
 		}
 	}
 
 	@Override
-	public void deleteProduct(int id) {
+	public boolean deleteProduct(int id) throws SQLException {
 		// product_images rows are removed by ON DELETE CASCADE in the schema
 		String sql = "delete from products where id = ?";
 		try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setInt(1, id);
-			stmt.executeUpdate();
+			return stmt.executeUpdate() == 1;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Could not delete product " + id, e);
+			throw e;
 		}
 	}
 
@@ -159,13 +166,14 @@ public class ProductDAOImpl implements ProductDAO {
 	}
 
 	@Override
-	public void deleteImage(int imageId) {
+	public boolean deleteImage(int imageId) throws SQLException {
 		String sql = "delete from product_images where id = ?";
 		try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setInt(1, imageId);
-			stmt.executeUpdate();
+			return stmt.executeUpdate() == 1;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Could not delete product image " + imageId, e);
+			throw e;
 		}
 	}
 
@@ -179,7 +187,8 @@ public class ProductDAOImpl implements ProductDAO {
 					return rs.getString("image_path");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Could not load image " + imageId, e);
+			throw new IllegalStateException("Could not load product image.", e);
 		}
 		return null;
 	}
@@ -187,7 +196,7 @@ public class ProductDAOImpl implements ProductDAO {
 	@Override
 	public List<ProductImage> getImagesForProduct(int productId) {
 		List<ProductImage> images = new ArrayList<>();
-		String sql = "select id, product_id, image_path from product_images where product_id = ?";
+		String sql = "select id, product_id, image_path from product_images where product_id = ? order by id";
 		try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setInt(1, productId);
 			try (ResultSet rs = stmt.executeQuery()) {
@@ -200,7 +209,8 @@ public class ProductDAOImpl implements ProductDAO {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Could not load images for product " + productId, e);
+			throw new IllegalStateException("Could not load product images.", e);
 		}
 		return images;
 	}

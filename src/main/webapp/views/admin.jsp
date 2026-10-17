@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 <title>Admin Dashboard | Veloci</title>
 <style>
 * {
@@ -78,6 +79,10 @@ h1 {
 	gap: 18px
 }
 
+.grid.row {
+	display: flex;
+}
+
 .card {
 	display: block;
 	padding: 26px;
@@ -141,7 +146,7 @@ button {
 </head>
 <body>
 	<header class="navbar">
-		<a class="logo" href="${pageContext.request.contextPath}/index.jsp">velo<span>ci</span></a>
+		<a class="logo" href="${pageContext.request.contextPath}/admin">velo<span>ci</span></a>
 		<span class="admin-badge">Admin</span>
 	</header>
 	<main>
@@ -151,17 +156,16 @@ button {
 			<c:out value="${sessionScope.name}" />
 			. Manage the store from here.
 		</p>
-		<section class="grid" aria-label="Store management">
-			<a class="card"
+		<section class="grid row g-4" aria-label="Store management">
+			<a class="card col-md-6"
 				href="${pageContext.request.contextPath}/admin/products">
 				<h2>Product management</h2>
-				<p>View, add, edit, and delete products in the storefront
-					catalogue.</p> <span>Manage products</span>
-			</a> <a class="card"
+				<p>View, add, edit, and delete products in the storefront catalogue.</p> <span>Manage products</span>
+			</a>
+			<a class="card col-md-6"
 				href="${pageContext.request.contextPath}/admin/categories">
 				<h2>Category management</h2>
-				<p>View, add, edit, and delete product categories.</p> <span>Manage
-					categories</span>
+				<p>View, add, edit, and delete product categories.</p> <span>Manage categories</span>
 			</a>
 		</section>
 		<div class="toolbar">

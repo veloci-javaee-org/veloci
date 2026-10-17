@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import database.DBConnection;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,45 +18,53 @@ import jakarta.servlet.http.HttpSession;
 public class AccountServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String path = req.getServletPath();
 		if ("/logout".equals(path)) {
-			HttpSession session = req.getSession(false);
-			if (session != null) {
-				session.invalidate();
-			}
-			res.sendRedirect(req.getContextPath() + "/index.jsp");
+			res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 			return;
 		}
-		if ("/profile".equals(path)) {
-			HttpSession session = req.getSession(false);
-			if (session == null || session.getAttribute("username") == null) {
-				res.sendRedirect(req.getContextPath() + "/views/login.html");
-				return;
-			}
-			String sql = "SELECT c.name,c.email,c.phone,c.address FROM customers c JOIN users u ON u.id=c.user_id WHERE u.username=?";
-			try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
-				ps.setString(1, (String) session.getAttribute("username"));
-				try (ResultSet rs = ps.executeQuery()) {
-					if (rs.next()) {
-						req.setAttribute("profileName", rs.getString("name"));
-						req.setAttribute("profileEmail", rs.getString("email"));
-						req.setAttribute("profilePhone", rs.getString("phone"));
-						req.setAttribute("profileAddress", rs.getString("address"));
-					}
-				}
-			} catch (Exception e) {
-				throw new ServletException("Could not load profile", e);
-			}
-			req.getRequestDispatcher("/views/profile.jsp").forward(req, res);
-		} else
+		if (!"/profile".equals(path)) {
 			req.getRequestDispatcher("/views/orders.jsp").forward(req, res);
+			return;
+		}
+
+		HttpSession session = req.getSession(false);
+		if (session == null || session.getAttribute("username") == null) {
+			res.sendRedirect(req.getContextPath() + "/login");
+			return;
+		}
+
+		String sql = "SELECT c.name, c.email, c.phone, c.address FROM customers c "
+				+ "JOIN users u ON u.id = c.user_id WHERE u.username = ?";
+		try (Connection connection = DBConnection.getConnection();
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, (String) session.getAttribute("username"));
+			try (ResultSet result = statement.executeQuery()) {
+				if (result.next()) {
+					req.setAttribute("profileName", result.getString("name"));
+					req.setAttribute("profileEmail", result.getString("email"));
+					req.setAttribute("profilePhone", result.getString("phone"));
+					req.setAttribute("profileAddress", result.getString("address"));
+				}
+			}
+		} catch (SQLException e) {
+			throw new ServletException("Could not load profile.", e);
+		}
+		req.getRequestDispatcher("/views/profile.jsp").forward(req, res);
 	}
 
+	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+		if (!"/logout".equals(req.getServletPath())) {
+			res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+			return;
+		}
 		HttpSession session = req.getSession(false);
-		if (session != null)
+		if (session != null) {
 			session.invalidate();
-		res.sendRedirect(req.getContextPath() + "/index.jsp");
+		}
+		res.sendRedirect(req.getContextPath() + "/home");
 	}
 }

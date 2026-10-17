@@ -1,17 +1,13 @@
 package servlet;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 
 import dto.SignupRequestDto;
-import enums.RoleEnum;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import service.UserService;
 
 @WebServlet("/signup")
@@ -23,7 +19,7 @@ public class Signup extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/views/signup.html").forward(request, response);
+        request.getRequestDispatcher("/views/signup.jsp").forward(request, response);
     }
 
     @Override
@@ -42,10 +38,11 @@ public class Signup extends HttpServlet {
         String error = userService.signup(dto);
 
         if (error == null) {
-            response.sendRedirect(request.getContextPath() + "/views/login.html?registered=1");
+            response.sendRedirect(request.getContextPath() + "/login?registered=1");
         } else {
-            String msg = URLEncoder.encode(error, StandardCharsets.UTF_8);
-            response.sendRedirect(request.getContextPath() + "/views/signup.html?error=" + msg);
+            request.setAttribute("error", error);
+            request.setAttribute("form", dto);
+            request.getRequestDispatcher("/views/signup.jsp").forward(request, response);
         }
     }
 }

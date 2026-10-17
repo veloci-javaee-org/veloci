@@ -29,9 +29,9 @@ import util.ImageHelper;
  * GET  /admin/products                      → list (+ optional ?keyword=)
  * GET  /admin/products?action=new           → add form
  * GET  /admin/products?action=edit&id=X     → edit form
- * GET  /admin/products?action=delete&id=X   → delete & redirect
  * GET  /admin/products?action=stock&id=X    → stock update form
  * POST /admin/products                      → create / update (id==0 → create)
+ * POST /admin/products?action=delete        → delete product
  * POST /admin/products?action=updateStock   → save new stock value
  * POST /admin/products?action=addImage      → upload one image to existing product
  * POST /admin/products?action=deleteImage   → remove one image by imageId
@@ -50,7 +50,6 @@ public class AdminProductServlet extends HttpServlet {
 	}
 
 	// ── GET ──────────────────────────────────────────────────────────────
-
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
@@ -88,15 +87,9 @@ public class AdminProductServlet extends HttpServlet {
 			break;
 		}
 
-		case "delete": {
-			int id = parseInt(req, "id");
-			// delete image files from disk first
-			for (ProductImage img : productDAO.getImagesForProduct(id))
-				ImageHelper.delete(img.getImagePath(), req.getServletContext().getRealPath("/"));
-			productDAO.deleteProduct(id);
-			res.sendRedirect(base(req) + "?msg=Product+deleted+successfully.");
+		case "delete":
+			res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 			break;
-		}
 
 		default: // list
 			String keyword = req.getParameter("keyword");
@@ -118,6 +111,9 @@ public class AdminProductServlet extends HttpServlet {
 			action = "save";
 
 		switch (action) {
+		case "delete":
+			handleDelete(req, res);
+			break;
 		case "addImage":
 			handleAddImage(req, res);
 			break;
@@ -138,23 +134,43 @@ public class AdminProductServlet extends HttpServlet {
 
 		String idParam = req.getParameter("id");
 		boolean isCreate = idParam == null || idParam.isBlank() || "0".equals(idParam.trim());
-
-		Product product = buildProductFromParams(req, isCreate ? 0 : Integer.parseInt(idParam.trim()));
+		Product product;
+		try {
+			product = buildProductFromParams(req, isCreate ? 0 : Integer.parseInt(idParam.trim()));
+		} catch (NumberFormatException e) {
+			product = new Product();
+			product.setName(req.getParameter("name"));
+			product.setDescription(req.getParameter("description"));
+			showProductForm(req, res, product, "Enter valid numbers for the product ID, price, stock, and category.");
+			return;
+		}
 
 		try {
 			validate(product);
 
 			if (isCreate) {
 				// 1. insert product row
-				int newId = productDAO.insertProduct(product);
-				if (newId == -1)
-					throw new RuntimeException("DB insert failed.");
+				int newId;
+				try {
+					newId = productDAO.insertProduct(product);
+				} catch (SQLException e) {
+					throw new ServletException("Could not save product.", e);
+				}
 				product.setId(newId);
-				saveProductImages(req, newId);
+				saveProductImages(req, newId, product.getName());
 				res.sendRedirect(base(req) + "?msg=Product+saved+successfully.");
 			} else {
-				productDAO.updateProduct(product);
-				saveProductImages(req, product.getId());
+				boolean updated;
+				try {
+					updated = productDAO.updateProduct(product);
+				} catch (SQLException e) {
+					throw new ServletException("Could not update product.", e);
+				}
+				if (!updated) {
+					res.sendRedirect(base(req) + "?error=Product+not+found.");
+					return;
+				}
+				saveProductImages(req, product.getId(), product.getName());
 				res.sendRedirect(base(req) + "?action=edit&id=" + product.getId() + "&msg=Product+saved+successfully.");
 			}
 
@@ -183,21 +199,26 @@ public class AdminProductServlet extends HttpServlet {
 		req.getRequestDispatcher("/views/admin/product-form.jsp").forward(req, res);
 	}
 
-	private void saveProductImages(HttpServletRequest req, int productId) throws IOException, ServletException {
+	private void saveProductImages(HttpServletRequest req, int productId, String productName)
+			throws IOException, ServletException {
 		String uploadDirectory = req.getServletContext().getRealPath("/images/products");
 		for (Part part : req.getParts()) {
 			if (!"images".equals(part.getName()) || part.getSize() == 0) {
 				continue;
 			}
 
-			String path = ImageHelper.save(part, uploadDirectory);
+			String path = ImageHelper.save(part, uploadDirectory, productName);
 			if (path == null) {
 				continue;
 			}
 			try {
 				productDAO.insertImage(productId, path);
 			} catch (SQLException e) {
-				ImageHelper.delete(path, req.getServletContext().getRealPath("/"));
+				try {
+					ImageHelper.delete(path, req.getServletContext().getRealPath("/"));
+				} catch (IOException cleanupError) {
+					e.addSuppressed(cleanupError);
+				}
 				throw new ServletException("The image could not be linked to the product.", e);
 			}
 		}
@@ -208,10 +229,19 @@ public class AdminProductServlet extends HttpServlet {
 		int id = parseInt(req, "id");
 		String stockParam = req.getParameter("stock");
 		try {
+			if (stockParam == null)
+				throw new NumberFormatException();
 			int newStock = Integer.parseInt(stockParam.trim());
 			if (newStock < 0)
 				throw new NumberFormatException();
-			productDAO.updateStock(id, newStock);
+			try {
+				if (!productDAO.updateStock(id, newStock)) {
+					res.sendRedirect(base(req) + "?error=Product+not+found.");
+					return;
+				}
+			} catch (SQLException e) {
+				throw new ServletException("Could not update product stock.", e);
+			}
 			res.sendRedirect(base(req) + "?msg=Stock+updated+successfully.");
 		} catch (NumberFormatException e) {
 			Product p = productDAO.getProductById(id);
@@ -221,16 +251,42 @@ public class AdminProductServlet extends HttpServlet {
 		}
 	}
 
+	private void handleDelete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		int id = parseInt(req, "id");
+		if (id <= 0) {
+			res.sendRedirect(base(req) + "?error=Invalid+product+ID.");
+			return;
+		}
+		try {
+			List<ProductImage> images = productDAO.getImagesForProduct(id);
+			if (!productDAO.deleteProduct(id)) {
+				res.sendRedirect(base(req) + "?error=Product+not+found.");
+				return;
+			}
+			for (ProductImage image : images) {
+				ImageHelper.delete(image.getImagePath(), req.getServletContext().getRealPath("/"));
+			}
+		} catch (SQLException e) {
+			throw new ServletException("Could not delete product.", e);
+		}
+		res.sendRedirect(base(req) + "?msg=Product+deleted+successfully.");
+	}
+
 	private void handleAddImage(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		int productId = parseInt(req, "productId");
 		try {
 			Part part = req.getPart("image");
-			String path = ImageHelper.save(part, req.getServletContext().getRealPath("/images/products"));
+			String path = ImageHelper.save(part, req.getServletContext().getRealPath("/images/products"),
+					getProductName(productId));
 			if (path != null) {
 				try {
 					productDAO.insertImage(productId, path);
 				} catch (SQLException e) {
-					ImageHelper.delete(path, req.getServletContext().getRealPath("/"));
+					try {
+						ImageHelper.delete(path, req.getServletContext().getRealPath("/"));
+					} catch (IOException cleanupError) {
+						e.addSuppressed(cleanupError);
+					}
 					throw new ServletException("The image could not be linked to the product.", e);
 				}
 			}
@@ -241,11 +297,30 @@ public class AdminProductServlet extends HttpServlet {
 		}
 	}
 
-	private void handleDeleteImage(HttpServletRequest req, HttpServletResponse res) throws IOException {
+	private void handleDeleteImage(HttpServletRequest req, HttpServletResponse res)
+			throws ServletException, IOException {
 		int imageId = parseInt(req, "imageId");
 		int productId = parseInt(req, "productId");
-		String path = productDAO.getImagePathById(imageId);
-		productDAO.deleteImage(imageId);
+		List<ProductImage> images = productDAO.getImagesForProduct(productId);
+		String path = null;
+		for (ProductImage image : images) {
+			if (image.getId() == imageId) {
+				path = image.getImagePath();
+				break;
+			}
+		}
+		if (path == null) {
+			res.sendRedirect(base(req) + "?action=edit&id=" + productId + "&error=Image+not+found.");
+			return;
+		}
+		try {
+			if (!productDAO.deleteImage(imageId)) {
+				res.sendRedirect(base(req) + "?action=edit&id=" + productId + "&error=Image+not+found.");
+				return;
+			}
+		} catch (SQLException e) {
+			throw new jakarta.servlet.ServletException("Could not delete product image.", e);
+		}
 		ImageHelper.delete(path, req.getServletContext().getRealPath("/"));
 		res.sendRedirect(base(req) + "?action=edit&id=" + productId);
 	}
@@ -279,14 +354,25 @@ public class AdminProductServlet extends HttpServlet {
 			throw new ValidationException("Price must be greater than 0.");
 		if (p.getStock() < 0)
 			throw new ValidationException("Stock cannot be negative.");
+		if (p.getCategory() != null
+				&& (p.getCategory().getId() <= 0 || categoryDAO.findById(p.getCategory().getId()) == null))
+			throw new ValidationException("Choose an existing category.");
 	}
 
 	private int parseInt(HttpServletRequest req, String param) {
+		String value = req.getParameter(param);
+		if (value == null)
+			return 0;
 		try {
-			return Integer.parseInt(req.getParameter(param).trim());
-		} catch (Exception e) {
+			return Integer.parseInt(value.trim());
+		} catch (NumberFormatException e) {
 			return 0;
 		}
+	}
+
+	private String getProductName(int productId) {
+		Product product = productDAO.getProductById(productId);
+		return product == null ? null : product.getName();
 	}
 
 	private String base(HttpServletRequest req) {

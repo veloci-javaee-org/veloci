@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <title>Update Stock — Admin | Veloci</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
@@ -61,12 +62,10 @@
 <body>
 
 <header class="navbar">
-    <a href="${pageContext.request.contextPath}/index.jsp" class="logo">velo<span>ci</span></a>
+    <a href="${pageContext.request.contextPath}/admin" class="logo">velo<span>ci</span></a>
     <ul class="nav-links">
         <li><a href="${pageContext.request.contextPath}/admin/products" class="active">Products</a></li>
         <li><a href="${pageContext.request.contextPath}/admin/categories">Categories</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/customers">Customers</a></li>
     </ul>
     <span class="admin-badge">Admin</span>
 </header>
