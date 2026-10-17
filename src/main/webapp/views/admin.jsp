@@ -153,14 +153,15 @@ button {
 		</p>
 		<section class="grid" aria-label="Store management">
 			<a class="card"
+				href="${pageContext.request.contextPath}/admin/products">
+				<h2>Product management</h2>
+				<p>View, add, edit, and delete products in the storefront
+					catalogue.</p> <span>Manage products</span>
+			</a> <a class="card"
 				href="${pageContext.request.contextPath}/admin/categories">
 				<h2>Category management</h2>
 				<p>View, add, edit, and delete product categories.</p> <span>Manage
 					categories</span>
-			</a> <a class="card" href="${pageContext.request.contextPath}/products">
-				<h2>Product catalog</h2>
-				<p>Browse and search the products currently available in the
-					store.</p> <span>View catalog</span>
 			</a>
 		</section>
 		<div class="toolbar">

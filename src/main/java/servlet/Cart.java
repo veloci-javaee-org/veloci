@@ -88,8 +88,7 @@ public class Cart extends HttpServlet {
 
     private boolean add(HttpServletRequest req, List<Map<String, Object>> items) {
         Product product = new ProductDAOImpl().getProductById(parse(req.getParameter("productId"), 0));
-        if (product == null || product.getCategory() == null
-                || !"Clothing".equalsIgnoreCase(product.getCategory().getName())) {
+        if (product == null || product.getStock() <= 0) {
             return false;
         }
         String size = req.getParameter("size");

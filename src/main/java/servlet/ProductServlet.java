@@ -6,25 +6,26 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import models.Product;
+import models.Category;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Comparator;
 
+import dao.CategoryDAO;
+import dao.CategoryDAOImpl;
 import dao.ProductDAO;
 import dao.ProductDAOImpl;
 
-/**
- * Servlet implementation class ProductServlet
- */
-//@WebServlet("/ProductServlet")
 public class ProductServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ProductDAO productDAO;
+	private CategoryDAO categoryDAO;
 
 	@Override
 	public void init() throws ServletException {
 		productDAO = new ProductDAOImpl();
+		categoryDAO = new CategoryDAOImpl();
 	}
 
 	public ProductServlet() {
@@ -53,18 +54,23 @@ public class ProductServlet extends HttpServlet {
 		String keyword = request.getParameter("keyword");
 		String category = request.getParameter("category");
 		String sort = request.getParameter("sort");
-		products.removeIf(p -> p.getCategory() == null || !"Clothing".equalsIgnoreCase(p.getCategory().getName()));
-		if (keyword != null && !keyword.isBlank())
-			products.removeIf(p -> !p.getName().toLowerCase().contains(keyword.toLowerCase()));
-		if (category != null && !category.isBlank())
-			products.removeIf(p -> !category.equalsIgnoreCase(p.getCategory().getName()));
+		List<Category> categories = categoryDAO.findAll();
+
+		if (keyword != null && !keyword.isBlank()) {
+			products.removeIf(p -> p.getName() == null || !p.getName().toLowerCase().contains(keyword.toLowerCase()));
+		}
+		if (category != null && !category.isBlank()) {
+			products.removeIf(p -> p.getCategory() == null || !category.equalsIgnoreCase(p.getCategory().getName()));
+		}
 		if ("price_asc".equals(sort))
 			products.sort(Comparator.comparingDouble(Product::getPrice));
 		else if ("price_desc".equals(sort))
 			products.sort(Comparator.comparingDouble(Product::getPrice).reversed());
 		else if ("name".equals(sort))
 			products.sort(Comparator.comparing(Product::getName, String.CASE_INSENSITIVE_ORDER));
+
 		request.setAttribute("products", products);
+		request.setAttribute("categories", categories);
 		request.setAttribute("searchKeyword", keyword);
 		request.setAttribute("selectedCategory", category);
 		request.setAttribute("sort", sort);

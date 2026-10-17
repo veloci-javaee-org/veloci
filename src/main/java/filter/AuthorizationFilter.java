@@ -23,8 +23,8 @@ public class AuthorizationFilter implements Filter {
             "/views/login.html", "/login",
             "/views/signup.html", "/signup",
             "/views/unauthorized.html", "/unauthorized.html",
-            "/products", "/search", "/product-details","/test-db"
-    );
+            "/products", "/search", "/product-details",
+            "/logout");
 
     // Path prefixes that don't need auth checks at all (static assets)
     private static final Set<String> PUBLIC_PREFIXES = Set.of(
@@ -60,10 +60,8 @@ public class AuthorizationFilter implements Filter {
 
         HttpSession session = request.getSession(false);
         boolean loggedIn = session != null && session.getAttribute("username") != null;
-
-        // Not logged in at all -> send to login page.
         if (!loggedIn) {
-            response.sendRedirect(request.getContextPath() + "/views/login.html");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 

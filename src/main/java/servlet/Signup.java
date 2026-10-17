@@ -42,8 +42,7 @@ public class Signup extends HttpServlet {
         String error = userService.signup(dto);
 
         if (error == null) {
-            response.sendRedirect(request.getContextPath() + "/views/login.html");
-        	
+            response.sendRedirect(request.getContextPath() + "/views/login.html?registered=1");
         } else {
             String msg = URLEncoder.encode(error, StandardCharsets.UTF_8);
             response.sendRedirect(request.getContextPath() + "/views/signup.html?error=" + msg);

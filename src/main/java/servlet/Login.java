@@ -18,49 +18,46 @@ import service.UserService;
 
 @WebServlet("/login")
 public class Login extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private final UserService userService = new UserService();
+	private final UserService userService = new UserService();
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.getRequestDispatcher("/views/login.html").forward(request, response);
-    }
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.getRequestDispatcher("/views/login.html").forward(request, response);
+	}
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        LoginRequestDto dto = new LoginRequestDto(
-                request.getParameter("identifier"),
-                request.getParameter("password")
-        );
+		LoginRequestDto dto = new LoginRequestDto(request.getParameter("identifier"), request.getParameter("password"));
 
-        LoginResult result = userService.login(dto);
+		LoginResult result = userService.login(dto);
 
-        if (result.isSuccess()) {
-            AuthenticatedUser user = result.getUser();
+		if (result.isSuccess()) {
+			AuthenticatedUser user = result.getUser();
 
-            HttpSession session = request.getSession(true);
-            
-            // These data of AuthenticatedUser will be used through the app to authorized the us
-            session.setAttribute("username", user.getUsername());
-            session.setAttribute("name", user.getName());
-            session.setAttribute("email", user.getEmail());
-            session.setAttribute("role", user.getRole());
-            session.setMaxInactiveInterval(30 * 60);
-            
-            
-            if (RoleEnum.ADMIN.equals(user.getRole())) {
-                response.sendRedirect(request.getContextPath() + "/views/admin.jsp");
-            } else {
-                response.sendRedirect(request.getContextPath() + "/index.jsp");
-            }
+			HttpSession session = request.getSession(true);
 
-        } else {
-            String msg = URLEncoder.encode(result.getError(), StandardCharsets.UTF_8);
-            response.sendRedirect(request.getContextPath() + "/views/login.html?error=" + msg);
-        }
-    }
+			// These data of AuthenticatedUser will be used through the app to authorized
+			// the us
+			session.setAttribute("username", user.getUsername());
+			session.setAttribute("name", user.getName());
+			session.setAttribute("email", user.getEmail());
+			session.setAttribute("role", user.getRole());
+			session.setMaxInactiveInterval(30 * 60);
+
+			if (RoleEnum.ADMIN.equals(user.getRole())) {
+				response.sendRedirect(request.getContextPath() + "/admin");
+			} else {
+				response.sendRedirect(request.getContextPath() + "/products");
+			}
+
+		} else {
+			String msg = URLEncoder.encode(result.getError(), StandardCharsets.UTF_8);
+			response.sendRedirect(request.getContextPath() + "/views/login.html?error=" + msg);
+		}
+	}
 }
