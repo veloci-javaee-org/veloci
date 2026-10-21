@@ -38,16 +38,19 @@
                                     <c:if test="${not empty item.product.images}">
                                         <img class="product-image" src="${pageContext.request.contextPath}/${item.product.images[0].imagePath}" alt="<c:out value='${item.product.name}'/>">
                                     </c:if>
-                                    <span><strong><c:out value="${item.product.name}"/></strong><br>Quantity: ${item.quantity}</span>
+                                    <span>
+                                        <strong><c:out value="${item.product.name}"/></strong><br>
+                                        <c:if test="${not empty item.size}">Size <c:out value="${item.size}"/> · </c:if>Quantity: ${item.quantity}
+                                    </span>
                                 </div>
                                 <strong class="text-nowrap">$<fmt:formatNumber value="${item.lineTotal}" pattern="#,##0.00"/></strong>
                             </li>
                         </c:forEach>
                     </ul>
                     <p class="text-end fs-5 fw-bold mt-4">Total: $<fmt:formatNumber value="${cartTotal}" pattern="#,##0.00"/></p>
-                    <form method="post" action="${pageContext.request.contextPath}/PlaceOrder" class="text-end">
-                        <button class="btn btn-dark" type="submit">Place order</button>
-                    </form>
+                    <div class="text-end">
+                        <a class="btn btn-dark" href="${pageContext.request.contextPath}/checkout">Checkout</a>
+                    </div>
                 </c:otherwise>
             </c:choose>
         </section>

@@ -32,6 +32,7 @@
         .purchase{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-top:20px}
         .purchase label{display:grid;gap:6px;font-weight:600}
         .purchase input{min-height:44px}
+        .purchase select{min-height:44px}
         @media(max-width:700px){.details-container{grid-template-columns:1fr;margin:20px auto}.info{padding:0}.info h1{font-size:32px}.image-gallery img{height:100vw;min-height:260px;max-height:520px}}
     </style>
 </head>
@@ -80,6 +81,22 @@
                     <form action="${pageContext.request.contextPath}/cart" method="POST" class="purchase" data-cart-add>
                         <input type="hidden" name="action" value="add">
                         <input type="hidden" name="productId" value="${product.id}">
+
+                        <%-- Size: only for clothing --%>
+                        <c:if test="${product.category.name == 'Clothing'}">
+                            <label for="size">Size:
+                                <select id="size" name="size" required>
+                                    <option value="" disabled selected>Choose</option>
+                                    <option value="XS">XS</option>
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                    <option value="XXL">XXL</option>
+                                </select>
+                            </label>
+                        </c:if>
+
                         <label for="qty">Quantity:
                             <input type="number" id="qty" name="quantity" value="1" min="1" max="${product.stock}" required>
                         </label>

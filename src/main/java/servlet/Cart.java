@@ -20,6 +20,7 @@ import models.Product;
 public class Cart extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String DRAWER_ITEMS = "/views/cart-drawer-items.jsp";
+	private static final String SIZES = "XS|S|M|L|XL|XXL";
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -34,7 +35,7 @@ public class Cart extends HttpServlet {
 		switch (action) {
 		case "add":
 			if (!add(req, items)) {
-				// Invalid product or unavailable stock: return to the shop.
+				// Invalid product, missing size or unavailable stock: return to the shop.
 				if (isAjax(req)) {
 					res.sendError(HttpServletResponse.SC_BAD_REQUEST);
 				} else {
@@ -80,12 +81,25 @@ public class Cart extends HttpServlet {
 		if (product == null || product.getStock() <= 0) {
 			return false;
 		}
+
+		// Clothing needs a valid size, other products have none ("")
+		boolean clothing = product.getCategory() != null
+				&& "Clothing".equalsIgnoreCase(product.getCategory().getName());
+		String size = req.getParameter("size");
+		if (clothing) {
+			if (size == null || !size.matches(SIZES)) {
+				return false;
+			}
+		} else {
+			size = "";
+		}
+
 		int quantity = Math.max(1, parse(req.getParameter("quantity"), 1));
 
-		// Merge the same product into one cart line.
+		// Same product + same size -> increase the existing line instead of duplicating
 		for (Map<String, Object> item : items) {
 			Product p = (Product) item.get("product");
-			if (p.getId() == product.getId()) {
+			if (p.getId() == product.getId() && size.equals(item.get("size"))) {
 				setQuantity(item, (Integer) item.get("quantity") + quantity);
 				return true;
 			}
@@ -93,6 +107,7 @@ public class Cart extends HttpServlet {
 
 		Map<String, Object> item = new LinkedHashMap<>();
 		item.put("product", product);
+		item.put("size", size);
 		item.put("quantity", 1);
 		item.put("lineTotal", 0.0);
 		setQuantity(item, quantity);

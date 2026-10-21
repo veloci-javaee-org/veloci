@@ -14,7 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet(urlPatterns = { "/profile", "/orders", "/logout" })
+// "/orders" is not mapped here: it belongs to the Orders servlet
+@WebServlet(urlPatterns = { "/profile", "/logout" })
 public class AccountServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -23,10 +24,6 @@ public class AccountServlet extends HttpServlet {
 		String path = req.getServletPath();
 		if ("/logout".equals(path)) {
 			res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-			return;
-		}
-		if (!"/profile".equals(path)) {
-			req.getRequestDispatcher("/views/orders.jsp").forward(req, res);
 			return;
 		}
 

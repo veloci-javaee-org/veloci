@@ -1,7 +1,8 @@
 package models;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import enums.OrderStatus;
@@ -13,7 +14,11 @@ public class Order {
 	private OrderStatus status;
 	private LocalDateTime orderDate;
 	private double totalPrice;
-	private List<OrderItem> orderItems;
+	private List<OrderItem> orderItems = new ArrayList<>();
+
+	// NEW
+	private String shippingPhone;
+	private String shippingAddress;
 
 	public Order() {
 
@@ -75,6 +80,44 @@ public class Order {
 
 	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
+	}
+
+	// NEW: delivery details saved with the order
+	public String getShippingPhone() {
+		return shippingPhone;
+	}
+
+	public void setShippingPhone(String shippingPhone) {
+		this.shippingPhone = shippingPhone;
+	}
+
+	public String getShippingAddress() {
+		return shippingAddress;
+	}
+
+	public void setShippingAddress(String shippingAddress) {
+		this.shippingAddress = shippingAddress;
+	}
+
+	// NEW: calculated, not stored
+	public double getSubtotal() {
+		double sum = 0;
+		if (orderItems != null) {
+			for (OrderItem item : orderItems) {
+				sum += item.getLineTotal();
+			}
+		}
+		return sum;
+	}
+
+	// NEW: what was charged for shipping = total minus the items
+	public double getShipping() {
+		return totalPrice - getSubtotal();
+	}
+
+	// NEW: fmt:formatDate can't format LocalDateTime, so the JSP prints this
+	public String getOrderDateFormatted() {
+		return orderDate == null ? "" : orderDate.format(DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm"));
 	}
 
 }

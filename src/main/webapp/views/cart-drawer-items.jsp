@@ -36,7 +36,9 @@
                             <button type="button" class="vc-remove" data-cart-action="remove"
                                     data-index="${st.index}" aria-label="Remove <c:out value='${item.product.name}'/>">&times;</button>
                         </div>
-                        <span class="vc-meta">Quantity: ${item.quantity}</span>
+                        <span class="vc-meta">
+                            <c:if test="${not empty item.size}">Size <c:out value="${item.size}"/> · </c:if>Quantity: ${item.quantity}
+                        </span>
                         <div class="vc-row vc-bottom">
                             <div class="vc-qty">
                                 <button type="button" data-cart-action="update" data-index="${st.index}"
@@ -56,9 +58,7 @@
         <div class="vc-footer">
             <div class="vc-line"><span>Subtotal</span><strong>$<fmt:formatNumber value="${subtotal}" pattern="#,##0.00"/></strong></div>
             <p class="vc-note">Shipping calculated at checkout.</p>
-            <form method="post" action="${pageContext.request.contextPath}/PlaceOrder">
-                <button type="submit" class="vc-btn vc-btn-block">Checkout</button>
-            </form>
+            <a class="vc-btn vc-btn-block" href="${pageContext.request.contextPath}/checkout">Checkout</a>
             <button type="button" class="vc-link" data-cart-close>Continue shopping</button>
         </div>
     </c:otherwise>

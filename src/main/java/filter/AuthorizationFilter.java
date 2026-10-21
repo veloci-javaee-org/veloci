@@ -28,7 +28,8 @@ public class AuthorizationFilter implements Filter {
             "/css/", "/js/", "/images/");
 
     private static final Set<String> CUSTOMER_ONLY_PATHS = Set.of(
-            "/profile", "/orders", "/cart", "/PlaceOrder");
+            "/profile", "/orders", "/checkout", "/PlaceOrder", "/order-success", "/order-details");
+
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)

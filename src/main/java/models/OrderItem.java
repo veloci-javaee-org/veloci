@@ -6,9 +6,10 @@ public class OrderItem {
 	private Product product;
 	private double price;
 	private int quantity;
-	
+	private String size;
+
 	public OrderItem() {
-		
+
 	}
 
 	public OrderItem(int id, Product product, float price, int quantity) {
@@ -39,7 +40,8 @@ public class OrderItem {
 		return price;
 	}
 
-	public void setPrice(float price) {
+	// CHANGED: was setPrice(float price)
+	public void setPrice(double price) {
 		this.price = price;
 	}
 
@@ -50,5 +52,19 @@ public class OrderItem {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	
+
+	// NEW
+	public String getSize() {
+		return size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
+	// NEW: calculated, not stored
+	public double getLineTotal() {
+		return price * quantity;
+	}
+
 }
