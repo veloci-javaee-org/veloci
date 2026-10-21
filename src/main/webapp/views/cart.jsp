@@ -2,106 +2,55 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <title>Your Cart | Veloci</title>
     <style>
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            background: #f7f7f5;
-            color: #171717;
-            font: 16px Arial;
-        }
-        .bar {
-            padding: 22px 7%;
-            background: white;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .brand {
-            font-size: 26px;
-            font-weight: bold;
-            text-decoration: none;
-            color: inherit;
-        }
-        .wrap {
-            max-width: 900px;
-            margin: 45px auto;
-            padding: 28px;
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 14px;
-        }
-        h1 {
-            font-size: 36px;
-            margin: 0 0 25px;
-        }
-        .item {
-            display: flex;
-            justify-content: space-between;
-            padding: 17px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .button {
-            display: inline-block;
-            padding: 12px 18px;
-            background: #171717;
-            border: 0;
-            border-radius: 7px;
-            color: #fff;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .total {
-            text-align: right;
-            font-size: 21px;
-            font-weight: bold;
-            margin: 24px 0;
-        }
+        body { background: #f7f7f5; color: #171717; }
+        .brand { color: inherit; font-size: 1.6rem; font-weight: 800; text-decoration: none; }
+        .cart-panel { border: 1px solid #eee; border-radius: 14px; }
+        .product-image { width: 76px; height: 92px; object-fit: cover; border-radius: 8px; }
     </style>
 </head>
 <body>
-
-    <header class="bar">
-        <a class="brand" href="${pageContext.request.contextPath}/index.jsp">veloci</a>
-        <a class="button" href="${pageContext.request.contextPath}/products">Continue shopping</a>
+    <header class="bg-white border-bottom">
+        <nav class="container py-3 d-flex justify-content-between align-items-center" aria-label="Main navigation">
+            <a class="brand" href="${pageContext.request.contextPath}/home">velo<span class="fw-normal">ci</span></a>
+            <a href="${pageContext.request.contextPath}/products">Continue shopping</a>
+        </nav>
     </header>
-
-    <main class="wrap">
-        <h1>Your cart</h1>
-
-        <c:choose>
-            <%-- Empty cart --%>
-            <c:when test="${empty cartItems}">
-                <p>Your cart is empty.</p>
-                <a class="button" href="${pageContext.request.contextPath}/products">Browse clothing</a>
-            </c:when>
-
-            <%-- Cart has items --%>
-            <c:otherwise>
-                <c:forEach var="item" items="${cartItems}">
-                    <div class="item">
-                        <span>
-                            <strong>${item.product.name}</strong><br>
-                            Size ${item.size} · Qty ${item.quantity}
-                        </span>
-                        <span>$<fmt:formatNumber value="${item.lineTotal}" pattern="#,##0.00"/></span>
+    <main class="container py-5">
+        <section class="cart-panel bg-white p-3 p-md-4 mx-auto" style="max-width: 900px">
+            <h1 class="h2 mb-4">Your cart</h1>
+            <c:choose>
+                <c:when test="${empty cartItems}">
+                    <p>Your cart is empty.</p>
+                    <a class="btn btn-dark" href="${pageContext.request.contextPath}/products">Browse products</a>
+                </c:when>
+                <c:otherwise>
+                    <ul class="list-group list-group-flush">
+                        <c:forEach var="item" items="${cartItems}">
+                            <li class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <c:if test="${not empty item.product.images}">
+                                        <img class="product-image" src="${pageContext.request.contextPath}/${item.product.images[0].imagePath}" alt="<c:out value='${item.product.name}'/>">
+                                    </c:if>
+                                    <span><strong><c:out value="${item.product.name}"/></strong><br>Size <c:out value="${item.size}"/> · Quantity: ${item.quantity}</span>
+                                </div>
+                                <strong class="text-nowrap">$<fmt:formatNumber value="${item.lineTotal}" pattern="#,##0.00"/></strong>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                    <p class="text-end fs-5 fw-bold mt-4">Total: $<fmt:formatNumber value="${cartTotal}" pattern="#,##0.00"/></p>
+                    <div class="text-end">
+                        <a class="btn btn-dark" href="${pageContext.request.contextPath}/checkout">Checkout</a>
                     </div>
-                </c:forEach>
-
-                <div class="total">
-                    Total: $<fmt:formatNumber value="${cartTotal}" pattern="#,##0.00"/>
-                </div>
-
-                <a class="button" href="${pageContext.request.contextPath}/checkout">Checkout</a>
-            </c:otherwise>
-        </c:choose>
+                </c:otherwise>
+            </c:choose>
+        </section>
     </main>
-
 </body>
 </html>

@@ -18,7 +18,7 @@
             <div class="vc-empty-icon">&#128722;</div>
             <h3>Your cart is empty</h3>
             <p>Looks like you haven't added anything yet.</p>
-            <a class="vc-btn" href="${pageContext.request.contextPath}/products">Browse clothing</a>
+            <a class="vc-btn" href="${pageContext.request.contextPath}/products">Browse products</a>
         </div>
     </c:when>
     <c:otherwise>
@@ -27,16 +27,16 @@
                 <li class="vc-item">
                     <div class="vc-thumb">
                         <c:if test="${not empty item.product.images}">
-                            <img src="${pageContext.request.contextPath}${item.product.images[0].imagePath}" alt="${item.product.name}">
+                            <img src="${pageContext.request.contextPath}/${item.product.images[0].imagePath}" alt="<c:out value='${item.product.name}'/>">
                         </c:if>
                     </div>
                     <div class="vc-info">
                         <div class="vc-row">
-                            <strong class="vc-name">${item.product.name}</strong>
+                            <strong class="vc-name"><c:out value="${item.product.name}"/></strong>
                             <button type="button" class="vc-remove" data-cart-action="remove"
-                                    data-index="${st.index}" aria-label="Remove ${item.product.name}">&times;</button>
+                                    data-index="${st.index}" aria-label="Remove <c:out value='${item.product.name}'/>">&times;</button>
                         </div>
-                        <span class="vc-meta">Size ${item.size}</span>
+                        <span class="vc-meta">Quantity: ${item.quantity}</span>
                         <div class="vc-row vc-bottom">
                             <div class="vc-qty">
                                 <button type="button" data-cart-action="update" data-index="${st.index}"

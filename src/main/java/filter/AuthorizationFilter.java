@@ -18,17 +18,18 @@ import jakarta.servlet.http.HttpSession;
 public class AuthorizationFilter implements Filter {
 
     private static final Set<String> PUBLIC_PATHS = Set.of(
-            "/", "/index.html", "/index.jsp",
-            "/views/login.html", "/login",
-            "/views/signup.html", "/signup",
+            "/", "/home",
+            "/login", "/signup",
             "/views/unauthorized.html", "/unauthorized.html",
-            "/products", "/search", "/product-details");
+            "/products", "/search", "/product-details",
+            "/logout");
 
     private static final Set<String> PUBLIC_PREFIXES = Set.of(
             "/css/", "/js/", "/images/");
 
     private static final Set<String> CUSTOMER_ONLY_PATHS = Set.of(
-            "/profile", "/orders", "/checkout", "/PlaceOrder", "/order-success", "order-details");
+            "/profile", "/orders", "/checkout", "/PlaceOrder", "/order-success", "/order-details");
+
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
@@ -42,6 +43,16 @@ public class AuthorizationFilter implements Filter {
             path = "/";
         }
 
+        if ("/index.jsp".equals(path)) {
+            response.sendRedirect(request.getContextPath() + "/home");
+            return;
+        }
+
+        if (path.startsWith("/views/") && path.endsWith(".jsp")) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
         if (PUBLIC_PATHS.contains(path) || startsWithAny(path, PUBLIC_PREFIXES)) {
             chain.doFilter(req, res);
             return;
@@ -50,18 +61,20 @@ public class AuthorizationFilter implements Filter {
         HttpSession session = request.getSession(false);
         boolean loggedIn = session != null && session.getAttribute("username") != null;
         if (!loggedIn) {
-            response.sendRedirect(request.getContextPath() + "/views/login.html");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
         Object role = session.getAttribute("role");
-        boolean adminPath = "/admin".equals(path) || path.startsWith("/admin/");
+        boolean adminPath = "/admin".equals(path) || path.startsWith("/admin/")
+                || "/test-db".equals(path);
         if (adminPath && !RoleEnum.ADMIN.equals(role)) {
             forbidden(request, response);
             return;
         }
 
-        if (CUSTOMER_ONLY_PATHS.contains(path) && RoleEnum.ADMIN.equals(role)) {
+        boolean customerPath = CUSTOMER_ONLY_PATHS.contains(path);
+        if (customerPath && !RoleEnum.CUSTOMER.equals(role)) {
             forbidden(request, response);
             return;
         }
