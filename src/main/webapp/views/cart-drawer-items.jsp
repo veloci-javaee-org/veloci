@@ -56,9 +56,7 @@
         <div class="vc-footer">
             <div class="vc-line"><span>Subtotal</span><strong>$<fmt:formatNumber value="${subtotal}" pattern="#,##0.00"/></strong></div>
             <p class="vc-note">Shipping calculated at checkout.</p>
-            <form method="post" action="${pageContext.request.contextPath}/PlaceOrder">
-                <button type="submit" class="vc-btn vc-btn-block">Checkout</button>
-            </form>
+            <a class="vc-btn vc-btn-block" href="${pageContext.request.contextPath}/checkout">Checkout</a>
             <button type="button" class="vc-link" data-cart-close>Continue shopping</button>
         </div>
     </c:otherwise>
