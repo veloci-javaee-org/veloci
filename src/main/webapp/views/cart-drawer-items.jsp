@@ -36,7 +36,9 @@
                             <button type="button" class="vc-remove" data-cart-action="remove"
                                     data-index="${st.index}" aria-label="Remove <c:out value='${item.product.name}'/>">&times;</button>
                         </div>
-                        <span class="vc-meta">Quantity: ${item.quantity}</span>
+                        <span class="vc-meta">
+                            <c:if test="${not empty item.size}">Size <c:out value="${item.size}"/> · </c:if>Quantity: ${item.quantity}
+                        </span>
                         <div class="vc-row vc-bottom">
                             <div class="vc-qty">
                                 <button type="button" data-cart-action="update" data-index="${st.index}"

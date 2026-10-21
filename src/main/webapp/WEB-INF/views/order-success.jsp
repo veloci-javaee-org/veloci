@@ -23,9 +23,6 @@
             justify-content: space-between;
             align-items: center;
         }
-        .bar .button {
-            margin-top: 0;
-        }
         .brand {
             font-size: 26px;
             font-weight: bold;
@@ -110,7 +107,7 @@
 <body>
 
     <header class="bar">
-        <a class="brand" href="${pageContext.request.contextPath}/index.jsp">veloci</a>
+        <a class="brand" href="${pageContext.request.contextPath}/home">veloci</a>
     </header>
 
     <main class="wrap">
@@ -120,11 +117,11 @@
             <c:when test="${empty sessionScope.lastOrderId}">
                 <h1>No recent order</h1>
                 <p class="sub">There is no order to show.</p>
-                <a class="button" href="${pageContext.request.contextPath}/products">Browse clothing</a>
+                <a class="button" href="${pageContext.request.contextPath}/products">Browse products</a>
             </c:when>
 
             <c:otherwise>
-                <h1>Thank you, ${sessionScope.name}!</h1>
+                <h1>Thank you, <c:out value="${sessionScope.name}"/>!</h1>
                 <p class="sub">Order #<c:out value="${sessionScope.lastOrderId}"/> has been placed.</p>
 
                 <h2>Items</h2>
@@ -132,13 +129,13 @@
                     <div class="item">
                         <div class="thumb">
                             <c:if test="${not empty item.product.images}">
-                                <img src="${pageContext.request.contextPath}${item.product.images[0].imagePath}"
-                                     alt="${item.product.name}">
+                                <img src="${pageContext.request.contextPath}/${item.product.images[0].imagePath}"
+                                     alt="<c:out value='${item.product.name}'/>">
                             </c:if>
                         </div>
                         <div class="info">
-                            <strong>${item.product.name}</strong><br>
-                            Size ${item.size} · Qty ${item.quantity}
+                            <strong><c:out value="${item.product.name}"/></strong><br>
+                            <c:if test="${not empty item.size}">Size <c:out value="${item.size}"/> · </c:if>Qty ${item.quantity}
                         </div>
                         <span class="price">$<fmt:formatNumber value="${item.lineTotal}" pattern="#,##0.00"/></span>
                     </div>
@@ -159,8 +156,8 @@
 
                 <h2>Delivery</h2>
                 <div class="delivery">
-                    <strong>Name:</strong> ${sessionScope.name}<br>
-                    <strong>Email:</strong> ${sessionScope.email}<br>
+                    <strong>Name:</strong> <c:out value="${sessionScope.name}"/><br>
+                    <strong>Email:</strong> <c:out value="${sessionScope.email}"/><br>
                     <strong>Phone:</strong> <c:out value="${sessionScope.lastOrderPhone}"/><br>
                     <strong>Address:</strong> <c:out value="${sessionScope.lastOrderAddress}"/><br>
                     <strong>Payment:</strong> Cash on Delivery

@@ -176,7 +176,7 @@
 <body>
 
     <header class="bar">
-        <a class="brand" href="${pageContext.request.contextPath}/index.jsp">veloci</a>
+        <a class="brand" href="${pageContext.request.contextPath}/home">veloci</a>
         <a href="${pageContext.request.contextPath}/cart">Back to cart</a>
     </header>
 
@@ -187,7 +187,7 @@
             <h1>Checkout</h1>
 
             <c:if test="${param.error == 'order'}">
-                <div class="error">We couldn't place your order. An item may be out of stock. Please check your cart and try again.</div>
+                <div class="error">We couldn't place your order. Please check your cart and try again.</div>
             </c:if>
 
             <form action="${pageContext.request.contextPath}/PlaceOrder" method="POST">
@@ -239,13 +239,15 @@
                 <div class="item">
                     <div class="thumb">
                         <c:if test="${not empty item.product.images}">
-                            <img src="${pageContext.request.contextPath}${item.product.images[0].imagePath}"
+                            <img src="${pageContext.request.contextPath}/${item.product.images[0].imagePath}"
                                  alt="<c:out value='${item.product.name}'/>">
                         </c:if>
                     </div>
                     <div class="info">
                         <strong><c:out value="${item.product.name}"/></strong><br>
-                        <span class="meta">Size <c:out value="${item.size}"/> · Qty ${item.quantity}</span>
+                        <span class="meta">
+                            <c:if test="${not empty item.size}">Size <c:out value="${item.size}"/> · </c:if>Qty ${item.quantity}
+                        </span>
                     </div>
                     <span class="price">$<fmt:formatNumber value="${item.lineTotal}" pattern="#,##0.00"/></span>
                 </div>

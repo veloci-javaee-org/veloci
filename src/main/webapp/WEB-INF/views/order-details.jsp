@@ -116,7 +116,7 @@
 <body>
 
     <header class="bar">
-        <a class="brand" href="${pageContext.request.contextPath}/index.jsp">veloci</a>
+        <a class="brand" href="${pageContext.request.contextPath}/home">veloci</a>
         <a href="${pageContext.request.contextPath}/orders">My orders</a>
     </header>
 
@@ -136,14 +136,14 @@
             <div class="item">
                 <div class="thumb">
                     <c:if test="${not empty item.product.images}">
-                        <img src="${pageContext.request.contextPath}${item.product.images[0].imagePath}"
+                        <img src="${pageContext.request.contextPath}/${item.product.images[0].imagePath}"
                              alt="<c:out value='${item.product.name}'/>">
                     </c:if>
                 </div>
                 <div class="info">
                     <strong><c:out value="${item.product.name}"/></strong><br>
                     <span class="meta">
-                        Size <c:out value="${item.size}"/> · Qty ${item.quantity}
+                        <c:if test="${not empty item.size}">Size <c:out value="${item.size}"/> · </c:if>Qty ${item.quantity}
                         · $<fmt:formatNumber value="${item.price}" pattern="#,##0.00"/> each
                     </span>
                 </div>

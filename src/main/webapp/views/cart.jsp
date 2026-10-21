@@ -38,7 +38,10 @@
                                     <c:if test="${not empty item.product.images}">
                                         <img class="product-image" src="${pageContext.request.contextPath}/${item.product.images[0].imagePath}" alt="<c:out value='${item.product.name}'/>">
                                     </c:if>
-                                    <span><strong><c:out value="${item.product.name}"/></strong><br>Size <c:out value="${item.size}"/> · Quantity: ${item.quantity}</span>
+                                    <span>
+                                        <strong><c:out value="${item.product.name}"/></strong><br>
+                                        <c:if test="${not empty item.size}">Size <c:out value="${item.size}"/> · </c:if>Quantity: ${item.quantity}
+                                    </span>
                                 </div>
                                 <strong class="text-nowrap">$<fmt:formatNumber value="${item.lineTotal}" pattern="#,##0.00"/></strong>
                             </li>
