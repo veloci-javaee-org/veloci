@@ -337,16 +337,15 @@ tbody tr:hover td {
 
 	<!-- NAVBAR -->
 	<header class="navbar">
-		<a href="${pageContext.request.contextPath}/index.jsp" class="logo">velo<span>ci</span></a>
-		<ul class="nav-links">
-			<li><a href="${pageContext.request.contextPath}/admin">Dashboard</a></li>
-			<li><a
-				href="${pageContext.request.contextPath}/admin/categories"
-				class="active">Categories</a></li>
-			<li><a href="${pageContext.request.contextPath}/products">Store
-					catalog</a></li>
-		</ul>
-		<span class="admin-badge">Admin</span>
+	    <a href="${pageContext.request.contextPath}/index.jsp" class="logo">velo<span>ci</span></a>
+	    <ul class="nav-links">
+	        <li><a href="${pageContext.request.contextPath}/admin">Dashboard</a></li>
+	        <li><a href="${pageContext.request.contextPath}/admin/products">Products</a></li>
+	        <li><a href="${pageContext.request.contextPath}/admin/categories" class="active">Categories</a></li>
+	        <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
+	        <li><a href="${pageContext.request.contextPath}/admin/customers">Customers</a></li>
+	    </ul>
+	    <span class="admin-badge">Admin</span>
 	</header>
 
 	<!-- PAGE -->

@@ -1,8 +1,15 @@
 package mapper;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import dto.SignupRequestDto;
 import enums.RoleEnum;
 import models.Customer;
+import models.Order;
 import models.User;
 
 /**
@@ -30,4 +37,21 @@ public class CustomerMapper {
 
         return customer;
     }
+    
+    public static Customer resultSetToEntity(ResultSet rs) throws SQLException {
+		 
+				Customer customer = new Customer();
+				User customerUser = new User();
+				
+				customer.setId(rs.getInt("id"));
+				customer.setName(rs.getString("name"));
+				customer.setEmail(rs.getString("email"));
+				customer.setPhone(rs.getString("phone"));
+				customer.getUser().setRegistrationDate(rs.getObject("registration_date", LocalDateTime.class));
+				customer.setUser(customerUser);
+				
+				return customer;
+
+    }
+    
 }

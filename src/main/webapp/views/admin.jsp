@@ -162,6 +162,14 @@ button {
 				<p>Browse and search the products currently available in the
 					store.</p> <span>View catalog</span>
 			</a>
+			<a class="card" href="${pageContext.request.contextPath}/admin/orders">
+				<h2>Orders management</h2>
+				<p>View and edit orders.</p> <span>View orders</span>
+			</a>
+			<a class="card" href="${pageContext.request.contextPath}/admin/customers">
+				<h2>Customers</h2>
+				<p>Browse and search customers.</p> <span>View customers</span>
+			</a>
 		</section>
 		<div class="toolbar">
 			<form action="${pageContext.request.contextPath}/logout"

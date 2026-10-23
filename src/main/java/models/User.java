@@ -1,5 +1,8 @@
 	package models;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import enums.RoleEnum;
 
 public class User {
@@ -7,6 +10,7 @@ public class User {
 	private String username;
 	private String password;
 	private RoleEnum role;
+	private LocalDateTime registrationDate = LocalDateTime.now();
 	
 	public User() {
 		
@@ -52,4 +56,19 @@ public class User {
 		this.role = role;
 	}
 	
+	public LocalDateTime getRegistrationDate() {
+		return registrationDate;
+	}
+	
+	public void setRegistrationDate(LocalDateTime date) {
+		this.registrationDate = date;
+	}
+	
+	public String getFormattedRegistrationDate() {
+	    if (this.registrationDate == null) {
+	        return "Unknown";
+	    }
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a");
+	    return this.registrationDate.format(formatter);
+	}
 }

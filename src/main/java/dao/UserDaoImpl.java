@@ -17,12 +17,13 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public int insert(Connection conn, User user) throws SQLException {
-        String sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO users (username, password, role, registration_date) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
             ps.setString(3, user.getRole().toString());
+            ps.setObject(4, user.getRegistrationDate());
             ps.executeUpdate();
 
             try (ResultSet keys = ps.getGeneratedKeys()) {

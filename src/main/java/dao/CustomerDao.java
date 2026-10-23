@@ -3,6 +3,8 @@ package dao;
 import java.sql.Connection;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 import models.Customer;
 
@@ -18,4 +20,8 @@ public interface CustomerDao {
     boolean existsByEmail(String email) throws SQLException;
 
     boolean existsByPhone(String phone) throws SQLException;
+    
+    List<Customer> findAll(Connection conn) throws SQLException;
+    
+    Optional<Customer> findById(Connection conn, int id) throws SQLException;
 }
