@@ -110,7 +110,7 @@ body.vc-lock{overflow:hidden}
         }).then(function (res) {
             // Filter redirects guests to the login page
             if (res.redirected && res.url.indexOf('login') !== -1) {
-                window.location.href = ctx + '/views/login.html';
+                window.location.href = ctx + '/login';
                 return null;
             }
             if (!res.ok) throw new Error('Cart request failed');

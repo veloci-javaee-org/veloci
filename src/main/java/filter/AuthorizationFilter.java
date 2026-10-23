@@ -17,24 +17,19 @@ import jakarta.servlet.http.HttpSession;
 @WebFilter("/*")
 public class AuthorizationFilter implements Filter {
 
-    // Pages reachable without being logged in at all
     private static final Set<String> PUBLIC_PATHS = Set.of(
-            "/", "/index.html", "/index.jsp",
-            "/views/login.html", "/login",
-            "/views/signup.html", "/signup",
+            "/", "/home",
+            "/login", "/signup",
             "/views/unauthorized.html", "/unauthorized.html",
-            "/products", "/search", "/product-details","/test-db"
-    );
+            "/products", "/search", "/product-details",
+            "/logout");
 
-    // Path prefixes that don't need auth checks at all (static assets)
     private static final Set<String> PUBLIC_PREFIXES = Set.of(
-            "/css/", "/js/", "/images/"
-    );
+            "/css/", "/js/", "/images/");
 
-    // Customer-only path restrictions
     private static final Set<String> CUSTOMER_ONLY_PATHS = Set.of(
-            "/customer_profile", "/profile", "/orders"
-    );
+            "/profile", "/orders", "/checkout", "/PlaceOrder", "/order-success", "/order-details");
+
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
@@ -48,11 +43,16 @@ public class AuthorizationFilter implements Filter {
             path = "/";
         }
 
-        System.out.println("[AuthorizationFilter] path=" + path
-                + " session=" + (request.getSession(false) != null)
-                + " role=" + (request.getSession(false) != null ? request.getSession(false).getAttribute("role") : "null"));
+        if ("/index.jsp".equals(path)) {
+            response.sendRedirect(request.getContextPath() + "/home");
+            return;
+        }
 
-        // Static assets and explicitly public pages pass straight through.
+        if (path.startsWith("/views/") && path.endsWith(".jsp")) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
         if (PUBLIC_PATHS.contains(path) || startsWithAny(path, PUBLIC_PREFIXES)) {
             chain.doFilter(req, res);
             return;
@@ -60,22 +60,21 @@ public class AuthorizationFilter implements Filter {
 
         HttpSession session = request.getSession(false);
         boolean loggedIn = session != null && session.getAttribute("username") != null;
-
-        // Not logged in at all -> send to login page.
         if (!loggedIn) {
-            response.sendRedirect(request.getContextPath() + "/views/login.html");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
         Object role = session.getAttribute("role");
-
-        boolean adminPath = "/admin".equals(path) || path.startsWith("/admin/") || "/admin_panel".equals(path);
+        boolean adminPath = "/admin".equals(path) || path.startsWith("/admin/")
+                || "/test-db".equals(path);
         if (adminPath && !RoleEnum.ADMIN.equals(role)) {
             forbidden(request, response);
             return;
         }
 
-        if (CUSTOMER_ONLY_PATHS.contains(path) && RoleEnum.ADMIN.equals(role)) {
+        boolean customerPath = CUSTOMER_ONLY_PATHS.contains(path);
+        if (customerPath && !RoleEnum.CUSTOMER.equals(role)) {
             forbidden(request, response);
             return;
         }

@@ -7,15 +7,17 @@ import models.Category;
 
 public interface CategoryService {
 
-    List<Category> getAll();
+	List<Category> getAll();
 
-    Category getById(int id);
+	Category getById(int id);
 
-    int countProducts(int categoryId);
+	int countProducts(int categoryId);
 
-    void create(Category category) throws ValidationException;
+	void create(Category category) throws ValidationException;
 
-    void update(Category category) throws ValidationException;
+	void update(Category category) throws ValidationException;
 
-    void delete(int id);
+	void delete(int id);
+
+	boolean existsByName(String name, int excludeId);
 }
