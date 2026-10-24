@@ -19,7 +19,7 @@ public class Signup extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/views/signup.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/customer/signup.jsp").forward(request, response);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class Signup extends HttpServlet {
         } else {
             request.setAttribute("error", error);
             request.setAttribute("form", dto);
-            request.getRequestDispatcher("/views/signup.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/customer/signup.jsp").forward(request, response);
         }
     }
 }

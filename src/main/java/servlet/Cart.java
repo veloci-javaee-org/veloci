@@ -19,7 +19,7 @@ import models.Product;
 @WebServlet("/cart")
 public class Cart extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String DRAWER_ITEMS = "/views/cart-drawer-items.jsp";
+	private static final String DRAWER_ITEMS = "/WEB-INF/views/shared/cart-drawer-items.jsp";
 	private static final String SIZES = "XS|S|M|L|XL|XXL";
 
 	@Override
@@ -71,7 +71,7 @@ public class Cart extends HttpServlet {
 		}
 		req.setAttribute("cartItems", items);
 		req.setAttribute("cartTotal", total);
-		req.getRequestDispatcher("/views/cart.jsp").forward(req, res);
+		req.getRequestDispatcher("/WEB-INF/views/customer/cart.jsp").forward(req, res);
 	}
 
 	// ---------------------------------------------------------------- actions

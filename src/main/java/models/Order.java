@@ -2,6 +2,7 @@ package models;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,6 +81,14 @@ public class Order {
 
 	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
+	}
+	
+	public String getFormattedOrderDate() {
+	    if (this.orderDate == null) {
+	        return "Unknown";
+	    }
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a");
+	    return this.orderDate.format(formatter);
 	}
 
 	// NEW: delivery details saved with the order

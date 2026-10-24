@@ -20,9 +20,8 @@ public class AuthorizationFilter implements Filter {
     private static final Set<String> PUBLIC_PATHS = Set.of(
             "/", "/home",
             "/login", "/signup",
-            "/views/unauthorized.html", "/unauthorized.html",
             "/products", "/search", "/product-details",
-            "/logout");
+            "/logout","/not-found","/data-issue");
 
     private static final Set<String> PUBLIC_PREFIXES = Set.of(
             "/css/", "/js/", "/images/");
@@ -37,6 +36,7 @@ public class AuthorizationFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
+
 
         String path = request.getRequestURI().substring(request.getContextPath().length());
         if (path.isEmpty()) {
@@ -79,6 +79,10 @@ public class AuthorizationFilter implements Filter {
             return;
         }
 
+        System.out.println("[AuthorizationFilter] path=" + path
+                + " session=" + (request.getSession(false) != null)
+                + " role=" + (request.getSession(false) != null ? request.getSession(false).getAttribute("role") : "null"));
+
         chain.doFilter(req, res);
     }
 
@@ -94,6 +98,6 @@ public class AuthorizationFilter implements Filter {
     private void forbidden(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        request.getRequestDispatcher("/unauthorized.html").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/errors/unauthorized.html").forward(request, response);
     }
 }

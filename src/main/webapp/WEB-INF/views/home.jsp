@@ -755,7 +755,7 @@ footer {
 
 	<div class="copyright">© 2026 Veloci. All rights reserved.</div>
 
-	<jsp:include page="/views/cart-drawer.jsp" />
+	<jsp:include page="/WEB-INF/views/shared/cart-drawer.jsp" />
 
 </body>
 

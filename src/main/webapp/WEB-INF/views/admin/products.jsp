@@ -17,7 +17,7 @@
         .navbar{height:72px;padding:0 7%;display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid #eee;position:sticky;top:0;z-index:10}
         .logo{font-size:27px;font-weight:800;letter-spacing:-1px}
         .logo span{font-weight:400}
-        .nav-links{display:flex;gap:28px;list-style:none;font-size:14px;color:#555}
+        .nav-links{display:flex;gap:28px;list-style:none;font-size:14px;color:#555;margin:0;padding:0;align-items:center}
         .nav-links a:hover{color:#000}
         .nav-links .active{color:#171717;font-weight:700;border-bottom:2px solid #171717;padding-bottom:2px}
         .admin-badge{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:5px 11px;border-radius:20px;background:#171717;color:#fff}
@@ -93,10 +93,13 @@
 <body>
 
 <header class="navbar">
-    <a href="${pageContext.request.contextPath}/admin" class="logo">velo<span>ci</span></a>
+    <a href="${pageContext.request.contextPath}/home" class="logo">velo<span>ci</span></a>
     <ul class="nav-links">
+        <li><a href="${pageContext.request.contextPath}/admin">Dashboard</a></li>
         <li><a href="${pageContext.request.contextPath}/admin/products" class="active">Products</a></li>
         <li><a href="${pageContext.request.contextPath}/admin/categories">Categories</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin/customers">Customers</a></li>
     </ul>
     <span class="admin-badge">Admin</span>
 </header>

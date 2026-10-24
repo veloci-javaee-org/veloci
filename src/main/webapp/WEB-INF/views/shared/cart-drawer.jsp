@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%-- Include once per page, just before </body>:
-     <jsp:include page="/views/cart-drawer.jsp"/>
+     <jsp:include page="/WEB-INF/views/shared/cart-drawer.jsp"/>
      Open it with any link/button that has the attribute data-cart-open.
      Add-to-cart forms get AJAX behaviour with the attribute data-cart-add. --%>
 <style>
@@ -56,7 +56,7 @@ body.vc-lock{overflow:hidden}
         <button type="button" class="vc-close" data-cart-close aria-label="Close cart">&times;</button>
     </div>
     <div class="vc-body" id="cartBody">
-        <jsp:include page="/views/cart-drawer-items.jsp"/>
+        <jsp:include page="/WEB-INF/views/shared/cart-drawer-items.jsp"/>
     </div>
 </aside>
 

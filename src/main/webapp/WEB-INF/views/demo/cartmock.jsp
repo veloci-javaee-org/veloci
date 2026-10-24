@@ -44,7 +44,7 @@
     <hr>
     
     <!-- Form pointing to the Checkout Servlet -->
-    <form action="checkout.jsp" method="POST">
+    <form action="${pageContext.request.contextPath}/checkout" method="POST">
         <button type="submit" class="btn-checkout">Proceed to Checkout</button>
     </form>
 </div>

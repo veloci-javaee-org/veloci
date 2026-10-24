@@ -16,6 +16,6 @@ public class AdminPanel extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.getRequestDispatcher("/views/admin.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/admin/admin.jsp").forward(request, response);
 	}
 }

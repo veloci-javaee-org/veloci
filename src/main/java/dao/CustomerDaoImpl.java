@@ -4,9 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import database.DBConnection;
+import mapper.CustomerMapper;
 import models.Customer;
+import models.User;
 
 public class CustomerDaoImpl implements CustomerDao {
 
@@ -47,4 +53,50 @@ public class CustomerDaoImpl implements CustomerDao {
             }
         }
     }
+    
+    @Override
+    public Optional<Customer> findById(Connection conn, int id) throws SQLException {
+    	String sql = """
+    			SELECT 
+    			c.id 
+    			, c.name 
+    			, c.email
+    			, c.phone
+    			, u.registration_date
+    			FROM customers c
+    			join users u on c.user_id = u.id
+    			WHERE c.id = ?
+    			""";
+    	
+    	try(PreparedStatement ps = conn.prepareStatement(sql)) {
+    		ps.setInt(1, id);
+    		try(ResultSet rs = ps.executeQuery()){
+    				if(rs.next())
+    				return Optional.ofNullable(CustomerMapper.resultSetToEntity(rs));
+    			}
+    		}
+    		return Optional.empty();
+
+    	}
+    
+    @Override
+    public List<Customer> findAll(Connection conn) throws SQLException {
+    	String sql = """
+    			SELECT c.id, c.name, c.email, c.phone, u.registration_date
+    			FROM customers c
+    			join users u on c.user_id = u.id
+    			""";
+    	List<Customer> customers = new ArrayList<>();
+    	try(PreparedStatement ps = conn.prepareStatement(sql);
+    			ResultSet rs = ps .executeQuery()) {
+    		
+    			while(rs.next()) {
+    				customers.add(CustomerMapper.resultSetToEntity(rs));
+    			
+    		}
+    	}
+    	return customers;
+    }
+    
+    
 }

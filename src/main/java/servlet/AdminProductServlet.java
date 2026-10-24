@@ -61,7 +61,7 @@ public class AdminProductServlet extends HttpServlet {
 
 		case "new":
 			req.setAttribute("categories", categoryDAO.findAll());
-			req.getRequestDispatcher("/views/admin/product-form.jsp").forward(req, res);
+			req.getRequestDispatcher("/WEB-INF/views/admin/product-form.jsp").forward(req, res);
 			break;
 
 		case "edit": {
@@ -72,7 +72,7 @@ public class AdminProductServlet extends HttpServlet {
 			}
 			req.setAttribute("product", p);
 			req.setAttribute("categories", categoryDAO.findAll());
-			req.getRequestDispatcher("/views/admin/product-form.jsp").forward(req, res);
+			req.getRequestDispatcher("/WEB-INF/views/admin/product-form.jsp").forward(req, res);
 			break;
 		}
 
@@ -83,7 +83,7 @@ public class AdminProductServlet extends HttpServlet {
 				return;
 			}
 			req.setAttribute("product", p);
-			req.getRequestDispatcher("/views/admin/product-stock.jsp").forward(req, res);
+			req.getRequestDispatcher("/WEB-INF/views/admin/product-stock.jsp").forward(req, res);
 			break;
 		}
 
@@ -97,7 +97,7 @@ public class AdminProductServlet extends HttpServlet {
 					: productDAO.getAllProduct();
 			req.setAttribute("products", products);
 			req.setAttribute("keyword", keyword);
-			req.getRequestDispatcher("/views/admin/products.jsp").forward(req, res);
+			req.getRequestDispatcher("/WEB-INF/views/admin/products.jsp").forward(req, res);
 		}
 	}
 
@@ -196,7 +196,7 @@ public class AdminProductServlet extends HttpServlet {
 		req.setAttribute("product", product);
 		req.setAttribute("error", error);
 		req.setAttribute("categories", categoryDAO.findAll());
-		req.getRequestDispatcher("/views/admin/product-form.jsp").forward(req, res);
+		req.getRequestDispatcher("/WEB-INF/views/admin/product-form.jsp").forward(req, res);
 	}
 
 	private void saveProductImages(HttpServletRequest req, int productId, String productName)
@@ -247,7 +247,7 @@ public class AdminProductServlet extends HttpServlet {
 			Product p = productDAO.getProductById(id);
 			req.setAttribute("product", p);
 			req.setAttribute("error", "Stock must be a non-negative whole number.");
-			req.getRequestDispatcher("/views/admin/product-stock.jsp").forward(req, res);
+			req.getRequestDispatcher("/WEB-INF/views/admin/product-stock.jsp").forward(req, res);
 		}
 	}
 

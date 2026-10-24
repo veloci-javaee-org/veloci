@@ -28,6 +28,6 @@ public class Home extends HttpServlet {
 		List<Category> categories = categoryDAO.findAll();
 		request.setAttribute("featuredProducts", products.size() > 4 ? products.subList(0, 4) : products);
 		request.setAttribute("storeCategories", categories);
-		request.getRequestDispatcher("/index.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(request, response);
 	}
 }

@@ -26,7 +26,7 @@ public class Orders extends HttpServlet {
         try {
             List<OrderSummary> orders = new OrderDaoImpl().findOrdersByUsername(username);
             req.setAttribute("orders", orders);
-            req.getRequestDispatcher("/WEB-INF/views/orders.jsp").forward(req, res);
+            req.getRequestDispatcher("/WEB-INF/views/customer/orders.jsp").forward(req, res);
         } catch (SQLException e) {
             throw new ServletException("Could not load orders", e);
         }
