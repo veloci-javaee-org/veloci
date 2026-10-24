@@ -36,7 +36,7 @@ public class OrderDetailsServlet extends HttpServlet {
                 return;
             }
             req.setAttribute("order", order);
-            req.getRequestDispatcher("/WEB-INF/views/order-details.jsp").forward(req, res);
+            req.getRequestDispatcher("/WEB-INF/views/customer/order-details.jsp").forward(req, res);
         } catch (SQLException e) {
             throw new ServletException("Could not load order", e);
         }

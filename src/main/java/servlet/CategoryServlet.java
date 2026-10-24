@@ -38,7 +38,7 @@ public class CategoryServlet extends HttpServlet {
 
 		case "new":
 			// No category attribute → form knows it's "add mode"
-			request.getRequestDispatcher("/views/admin/category-form.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/admin/category-form.jsp").forward(request, response);
 			break;
 
 		case "edit": {
@@ -52,7 +52,7 @@ public class CategoryServlet extends HttpServlet {
 				return;
 			}
 			request.setAttribute("category", category);
-			request.getRequestDispatcher("/views/admin/category-form.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/admin/category-form.jsp").forward(request, response);
 			break;
 		}
 
@@ -89,7 +89,7 @@ public class CategoryServlet extends HttpServlet {
 				category.setId(Integer.parseInt(idParam.trim()));
 			} catch (NumberFormatException e) {
 				request.setAttribute("error", "Invalid category ID.");
-				request.getRequestDispatcher("/views/admin/category-form.jsp").forward(request, response);
+				request.getRequestDispatcher("/WEB-INF/views/admin/category-form.jsp").forward(request, response);
 				return;
 			}
 		}
@@ -109,7 +109,7 @@ public class CategoryServlet extends HttpServlet {
 			// Return to form with input preserved + error message
 			request.setAttribute("category", category);
 			request.setAttribute("error", e.getMessage());
-			request.getRequestDispatcher("/views/admin/category-form.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/admin/category-form.jsp").forward(request, response);
 		}
 	}
 
@@ -127,7 +127,7 @@ public class CategoryServlet extends HttpServlet {
 
 		request.setAttribute("categories", categories);
 		request.setAttribute("productCounts", productCounts);
-		request.getRequestDispatcher("/views/admin/categories.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/admin/categories.jsp").forward(request, response);
 	}
 
 	/**

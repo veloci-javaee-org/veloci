@@ -36,7 +36,7 @@ public class CheckOut extends HttpServlet {
         // 1. Must be logged in
         Object username = session.getAttribute("username");
         if (username == null) {
-            res.sendRedirect(req.getContextPath() + "/views/login.html");
+            res.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
@@ -58,7 +58,7 @@ public class CheckOut extends HttpServlet {
         req.setAttribute("subtotal", subtotal);
         req.setAttribute("shipping", shipping);
         req.setAttribute("totalPrice", totalPrice);
-        req.getRequestDispatcher("/checkout.jsp").forward(req, res);
+        req.getRequestDispatcher("/WEB-INF/views/customer/checkout.jsp").forward(req, res);
     }
 	
 

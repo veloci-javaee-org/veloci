@@ -398,7 +398,7 @@
                         </c:otherwise>
                     </c:choose>
                 </main>
-                <c:if test="${sessionScope.role == 'CUSTOMER'}"><jsp:include page="/views/cart-drawer.jsp" /></c:if>
+                <c:if test="${sessionScope.role == 'CUSTOMER'}"><jsp:include page="/WEB-INF/views/shared/cart-drawer.jsp" /></c:if>
             </body>
 
             </html>

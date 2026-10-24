@@ -49,7 +49,7 @@ public class AccountServlet extends HttpServlet {
 		} catch (SQLException e) {
 			throw new ServletException("Could not load profile.", e);
 		}
-		req.getRequestDispatcher("/views/profile.jsp").forward(req, res);
+		req.getRequestDispatcher("/WEB-INF/views/customer/profile.jsp").forward(req, res);
 	}
 
 	@Override

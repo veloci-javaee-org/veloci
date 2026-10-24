@@ -93,7 +93,7 @@
 <body>
 
 <header class="navbar">
-    <a href="${pageContext.request.contextPath}/index.jsp" class="logo">velo<span>ci</span></a>
+    <a href="${pageContext.request.contextPath}/home" class="logo">velo<span>ci</span></a>
     <ul class="nav-links">
         <li><a href="${pageContext.request.contextPath}/admin">Dashboard</a></li>
         <li><a href="${pageContext.request.contextPath}/admin/products" class="active">Products</a></li>

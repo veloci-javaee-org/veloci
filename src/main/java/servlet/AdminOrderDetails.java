@@ -27,29 +27,47 @@ public class AdminOrderDetails extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		int id = Integer.parseInt(request.getParameter("id"));
+		int id;
+		try {
+			id = Integer.parseInt(request.getParameter("id"));
+		} catch (NumberFormatException e) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid order ID.");
+			return;
+		}
 		
 		try {
 			Order order = service.getOrderById(id);
 			request.setAttribute("order", order);
-			request.getRequestDispatcher("/views/admin/admin-order-details.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/admin/admin-order-details.jsp").forward(request, response);
 		}
 		catch(DBException e) {
 			e.printStackTrace();
-			request.getRequestDispatcher("/data-issue.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/errors/data-issue.jsp").forward(request, response);
 		}
 		catch(OrderNotFoundException e) {
 			e.printStackTrace();
 			request.setAttribute("message", e.getMessage());
-			request.getRequestDispatcher("/not-found.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/errors/not-found.jsp").forward(request, response);
 		}
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int id = Integer.parseInt(request.getParameter("id"));
-		OrderStatus status = OrderStatus.valueOf(request.getParameter("status").toUpperCase());
+		int id;
+		try {
+			id = Integer.parseInt(request.getParameter("id"));
+		} catch (NumberFormatException e) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid order ID.");
+			return;
+		}
+
+		OrderStatus status;
+		try {
+			status = OrderStatus.valueOf(request.getParameter("status").toUpperCase());
+		} catch (IllegalArgumentException | NullPointerException e) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid order status.");
+			return;
+		}
 		try {
 			service.updateOrderStatus(id, status);
 			request.getRequestDispatcher("/admin/orders").forward(request, response);
@@ -57,7 +75,7 @@ public class AdminOrderDetails extends HttpServlet {
 		catch(OrderNotFoundException e) {
 			e.printStackTrace();
 			request.setAttribute("message", e.getMessage());
-			request.getRequestDispatcher("/not-found.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/errors/not-found.jsp").forward(request, response);
 		}
 		
 	}

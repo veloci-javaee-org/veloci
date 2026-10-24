@@ -30,11 +30,11 @@ public class AdminOrderServlet extends HttpServlet {
 		try {
 			List<Order> orders = service.getOrders();
 			request.setAttribute("orders", orders);
-			request.getRequestDispatcher("/views/admin/admin-orders.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/admin/admin-orders.jsp").forward(request, response);
 		}
 		catch(DBException e) {
 			request.setAttribute("message", e.getMessage());
-			request.getRequestDispatcher("/data-issue.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/errors/data-issue.jsp").forward(request, response);
 		}
 	}
 

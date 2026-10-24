@@ -115,7 +115,7 @@
 <body>
 
     <header class="bar">
-        <a class="brand" href="${pageContext.request.contextPath}/index.jsp">veloci</a>
+        <a class="brand" href="${pageContext.request.contextPath}/home">veloci</a>
         <a href="${pageContext.request.contextPath}/profile">My profile</a>
     </header>
 

@@ -5,7 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Customer Details — Admin | Veloci</title>
+<title>Orders — Admin | Veloci</title>
+<!-- Font Awesome for modern icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 * {
@@ -80,102 +81,76 @@ a {
 	color: #fff;
 }
 
-/* PAGE HEADER */
+/* PAGE */
 .page {
 	padding: 50px 7%;
-	max-width: 1400px;
-	margin: 0 auto;
 }
 
 .page-header {
 	display: flex;
-	align-items: center;
-	gap: 16px;
+	justify-content: space-between;
+	align-items: flex-end;
 	margin-bottom: 32px;
 }
 
-.back-btn {
-	background: #fff;
-	border: 1px solid #ddd;
-	padding: 10px 16px;
-	border-radius: 8px;
-	font-size: 14px;
-	color: #555;
-	transition: 0.2s;
-}
-
-.back-btn:hover {
-	background: #eee;
-	color: #000;
-}
-
-.page-title h1 {
-	font-size: 32px;
+.page-header-left h1 {
+	font-size: 34px;
 	letter-spacing: -1px;
-}
-
-/* CUSTOMER PROFILE CARD */
-.profile-card {
-	background: #fff;
-	border: 1px solid #eeeeee;
-	border-radius: 12px;
-	padding: 30px;
-	margin-bottom: 40px;
-	display: flex;
-	gap: 40px;
-}
-
-.profile-avatar {
-	width: 80px;
-	height: 80px;
-	background: #f0f0f0;
-	border-radius: 50%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 32px;
-	color: #999;
-}
-
-.profile-info {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 20px 60px;
-	width: 100%;
-}
-
-.info-group h4 {
-	font-size: 12px;
-	color: #999;
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
 	margin-bottom: 6px;
 }
 
-.info-group p {
-	font-size: 15px;
-	font-weight: 600;
-}
-
-.info-group .icon {
+.page-header-left p {
 	color: #777;
-	margin-right: 8px;
-	width: 16px;
-	text-align: center;
+	font-size: 14px;
 }
 
-/* TABLE (Order History) */
-.section-title {
-	font-size: 20px;
-	margin-bottom: 16px;
-	letter-spacing: -0.5px;
+/* STATS */
+.stats-row {
+	display: flex;
+	gap: 16px;
+	margin-bottom: 28px;
 }
 
+.stat-card {
+	background: #fff;
+	border: 1px solid #eeeeee;
+	border-radius: 12px;
+	padding: 20px 28px;
+}
+
+.stat-label {
+	font-size: 12px;
+	color: #999;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	margin-bottom: 6px;
+}
+
+.stat-value {
+	font-size: 30px;
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+/* TABLE */
 .table-wrap {
 	background: #fff;
 	border: 1px solid #eeeeee;
 	border-radius: 12px;
 	overflow: hidden;
+}
+
+.table-toolbar {
+	padding: 16px 22px;
+	border-bottom: 1px solid #eeeeee;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.table-toolbar span {
+	font-size: 13px;
+	color: #999;
 }
 
 table {
@@ -216,7 +191,7 @@ tbody tr:hover td {
 	color: #171717;
 }
 
-/* BADGES */
+/* STATUS BADGES */
 .badge {
 	display: inline-block;
 	padding: 5px 12px;
@@ -226,11 +201,11 @@ tbody tr:hover td {
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
 }
-.badge-PENDING { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-.badge-CONFIRMED { background: #cce5ff; color: #004085; border: 1px solid #b8daff; }
-.badge-SHIPPED { background: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
-.badge-DELIVERED { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-.badge-CANCELLED { background: #f8d7da; color: #721c24; border: 1px solid #f5c6c2; }
+.badge-Pending { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+.badge-Confirmed { background: #cce5ff; color: #004085; border: 1px solid #b8daff; }
+.badge-Shipped { background: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
+.badge-Delivered { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.badge-Cancelled { background: #f8d7da; color: #721c24; border: 1px solid #f5c6c2; }
 
 /* BUTTONS */
 .btn-edit {
@@ -250,7 +225,7 @@ tbody tr:hover td {
 
 /* EMPTY STATE */
 .empty-state {
-	padding: 50px 20px;
+	padding: 70px 20px;
 	text-align: center;
 }
 
@@ -262,13 +237,15 @@ tbody tr:hover td {
 }
 
 .empty-state h3 {
-	font-size: 18px;
+	font-size: 20px;
 	margin-bottom: 8px;
+	letter-spacing: -.5px;
 }
 
 .empty-state p {
 	color: #888;
 	font-size: 14px;
+	margin-bottom: 22px;
 }
 
 /* FOOTER */
@@ -278,78 +255,64 @@ tbody tr:hover td {
 	border-top: 1px solid #eee;
 	margin-top: 80px;
 }
+
+.page-footer span {
+	font-size: 13px;
+	color: #aaa;
+}
 </style>
 </head>
 <body>
 
 	<!-- NAVBAR -->
 	<header class="navbar">
-	    <a href="${pageContext.request.contextPath}/index.jsp" class="logo">velo<span>ci</span></a>
+	    <a href="${pageContext.request.contextPath}/home" class="logo">velo<span>ci</span></a>
 	    <ul class="nav-links">
 	        <li><a href="${pageContext.request.contextPath}/admin">Dashboard</a></li>
 	        <li><a href="${pageContext.request.contextPath}/admin/products">Products</a></li>
 	        <li><a href="${pageContext.request.contextPath}/admin/categories">Categories</a></li>
-	        <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
-	        <li><a href="${pageContext.request.contextPath}/admin/customers" class="active">Customers</a></li>
+	        <li><a href="${pageContext.request.contextPath}/admin/orders" class="active">Orders</a></li>
+	        <li><a href="${pageContext.request.contextPath}/admin/customers">Customers</a></li>
 	    </ul>
 	    <span class="admin-badge">Admin</span>
 	</header>
 
+	<!-- PAGE -->
 	<div class="page">
-		
+
 		<div class="page-header">
-			<a href="${pageContext.request.contextPath}/admin/customers" class="back-btn">
-				<i class="fa-solid fa-arrow-left"></i> Back to Customers
-			</a>
-			<div class="page-title">
-				<h1>Customer Profile</h1>
+			<div class="page-header-left">
+				<h1>Orders</h1>
+				<p>Manage customer orders and update shipping statuses.</p>
 			</div>
 		</div>
 
-		<!-- CUSTOMER DETAILS CARD -->
-		<div class="profile-card">
-			<div class="profile-avatar">
-				<i class="fa-regular fa-user"></i>
-			</div>
-			
-			<div class="profile-info">
-				<div class="info-group">
-					<h4>Full Name</h4>
-					<p><c:out value="${customer.name}" /></p>
-				</div>
-				
-				<div class="info-group">
-					<h4>Customer ID</h4>
-					<p>#${customer.id}</p>
-				</div>
-				
-				<div class="info-group">
-					<h4>Contact Information</h4>
-					<p><i class="fa-regular fa-envelope icon"></i> <c:out value="${customer.email}" /></p>
-					<p style="margin-top: 6px;">
-						<i class="fa-solid fa-mobile-screen icon"></i> 
-						<c:choose>
-							<c:when test="${not empty customer.phone}"><c:out value="${customer.phone}" /></c:when>
-							<c:otherwise><span style="color:#aaa; font-style:italic;">No phone provided</span></c:otherwise>
-						</c:choose>
-					</p>
-				</div>
-				
-				<div class="info-group">
-					<h4>Registration Date</h4>
-					<p><i class="fa-regular fa-calendar icon"></i> <c:out value="${not empty customer.user.formattedRegistrationDate ? customer.user.formattedRegistrationDate : customer.user.registrationDate}" /></p>
+		<div class="stats-row">
+			<div class="stat-card">
+				<div class="stat-label">Total Orders</div>
+				<div class="stat-value">
+					<c:choose>
+						<c:when test="${not empty orders}">${orders.size()}</c:when>
+						<c:otherwise>0</c:otherwise>
+					</c:choose>
 				</div>
 			</div>
 		</div>
 
-		<!-- ORDER HISTORY -->
-		<h2 class="section-title">Order History</h2>
-		
 		<div class="table-wrap">
+			<div class="table-toolbar">
+				<span>
+					<c:choose>
+						<c:when test="${not empty orders}">${orders.size()} orders found</c:when>
+						<c:otherwise>0 orders</c:otherwise>
+					</c:choose>
+				</span>
+			</div>
 			<table>
 				<thead>
 					<tr>
 						<th>Order ID</th>
+						<th>Customer ID</th>
 						<th>Date</th>
 						<th>Total Amount</th>
 						<th>Status</th>
@@ -360,11 +323,11 @@ tbody tr:hover td {
 					<c:choose>
 						<c:when test="${empty orders}">
 							<tr>
-								<td colspan="5">
+								<td colspan="6">
 									<div class="empty-state">
 										<div class="empty-icon"><i class="fa-solid fa-box-open"></i></div>
 										<h3>No orders yet</h3>
-										<p>This customer hasn't placed any orders.</p>
+										<p>When customers place orders, they will appear here.</p>
 									</div>
 								</td>
 							</tr>
@@ -374,7 +337,14 @@ tbody tr:hover td {
 								<tr>
 									<td class="cell-num">#${order.id}</td>
 									
+									<td>
+										<a href="${pageContext.request.contextPath}/admin/customer-details?id=${order.customer.id}" style="color: #0066cc; font-weight: 600;">
+											Cust-${order.customer.id}
+										</a>
+									</td>
+									
 									<td style="color: #666;">
+										<!-- Assumes you add a getFormattedOrderDate() to Order.java, otherwise falls back to raw date -->
 										<c:out value="${not empty order.formattedOrderDate ? order.formattedOrderDate : order.orderDate}" />
 									</td>
 									
@@ -383,9 +353,9 @@ tbody tr:hover td {
 									</td>
 									
 									<td>
-										<!-- Uses the order.status.name() to get the uppercase ENUM value for the badge CSS -->
-										<span class="badge badge-${order.status.name()}">
-											<c:out value="${order.status.name()}" />
+										<!-- Dynamically applies the CSS class based on the Enum value (e.g. badge-Pending, badge-Delivered) -->
+										<span class="badge badge-${order.status}">
+											<c:out value="${order.status}" />
 										</span>
 									</td>
 									

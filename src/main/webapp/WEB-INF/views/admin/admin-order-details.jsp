@@ -275,7 +275,7 @@ tbody tr:last-child td {
 
 	<!-- NAVBAR -->
 	<header class="navbar">
-	    <a href="${pageContext.request.contextPath}/index.jsp" class="logo">velo<span>ci</span></a>
+	    <a href="${pageContext.request.contextPath}/home" class="logo">velo<span>ci</span></a>
 	    <ul class="nav-links">
 	        <li><a href="${pageContext.request.contextPath}/admin">Dashboard</a></li>
 	        <li><a href="${pageContext.request.contextPath}/admin/products">Products</a></li>

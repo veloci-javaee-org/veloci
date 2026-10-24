@@ -200,7 +200,7 @@
 <body>
 
     <header class="navbar">
-        <a class="logo" href="${pageContext.request.contextPath}/index.jsp">velo<span>ci</span></a>
+        <a class="logo" href="${pageContext.request.contextPath}/home">velo<span>ci</span></a>
         <ul class="nav-links">
             <li><a href="${pageContext.request.contextPath}/admin" class="active">Dashboard</a></li>
             <li><a href="${pageContext.request.contextPath}/admin/products">Products</a></li>

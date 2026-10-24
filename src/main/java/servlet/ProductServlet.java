@@ -71,7 +71,7 @@ public class ProductServlet extends HttpServlet {
 		request.setAttribute("searchKeyword", keyword);
 		request.setAttribute("selectedCategory", category);
 		request.setAttribute("sort", sort);
-		request.getRequestDispatcher("/views/products.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/customer/products.jsp").forward(request, response);
 	}
 
 	private void handleSearch(HttpServletRequest request, HttpServletResponse response)
@@ -99,7 +99,7 @@ public class ProductServlet extends HttpServlet {
 
 			if (product != null) {
 				request.setAttribute("product", product);
-				request.getRequestDispatcher("/views/product-details.jsp").forward(request, response);
+				request.getRequestDispatcher("/WEB-INF/views/customer/product-details.jsp").forward(request, response);
 			} else {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			}

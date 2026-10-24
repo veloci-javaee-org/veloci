@@ -47,8 +47,8 @@ public class CustomerMapper {
 				customer.setName(rs.getString("name"));
 				customer.setEmail(rs.getString("email"));
 				customer.setPhone(rs.getString("phone"));
-				customer.getUser().setRegistrationDate(rs.getObject("registration_date", LocalDateTime.class));
 				customer.setUser(customerUser);
+				customerUser.setRegistrationDate(rs.getObject("registration_date", LocalDateTime.class));
 				
 				return customer;
 

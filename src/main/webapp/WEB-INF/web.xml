@@ -20,7 +20,7 @@
 
 	</context-param><context-param>
 	<param-name>db.password</param-name>
-	<param-value>Password22@</param-value>
+	<param-value></param-value>
 	</context-param>
 
 

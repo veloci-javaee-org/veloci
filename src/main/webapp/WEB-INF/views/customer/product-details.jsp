@@ -109,7 +109,7 @@
         </div>
     </div>
 
-    <c:if test="${sessionScope.role == 'CUSTOMER'}"><jsp:include page="/views/cart-drawer.jsp"/></c:if>
+    <c:if test="${sessionScope.role == 'CUSTOMER'}"><jsp:include page="/WEB-INF/views/shared/cart-drawer.jsp"/></c:if>
     <script>
         (function () {
             var gallery = document.getElementById("productGallery");

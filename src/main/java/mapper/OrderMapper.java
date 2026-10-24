@@ -49,7 +49,7 @@ public class OrderMapper {
 			OrderItem item = new OrderItem();
 			Product product = new Product();
 			item.setId(rs.getInt("item_id"));
-			item.setPrice(rs.getInt("price"));
+			item.setPrice(rs.getDouble("price"));
 			item.setQuantity(rs.getInt("quantity"));
 			product.setId(rs.getInt("product_id"));
 			product.setName(rs.getString("product_name"));

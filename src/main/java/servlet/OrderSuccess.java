@@ -27,6 +27,6 @@ public class OrderSuccess extends HttpServlet {
             res.sendRedirect(req.getContextPath() + "/products");
             return;
         }
-        req.getRequestDispatcher("/WEB-INF/views/order-success.jsp").forward(req, res);
+        req.getRequestDispatcher("/WEB-INF/views/customer/order-success.jsp").forward(req, res);
     }
 }

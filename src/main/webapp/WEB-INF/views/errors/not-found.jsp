@@ -39,7 +39,7 @@ a { text-decoration: none; color: inherit; }
 <body>
 
 	<header class="navbar">
-	    <a href="${pageContext.request.contextPath}/index.jsp" class="logo">velo<span>ci</span></a>
+	    <a href="${pageContext.request.contextPath}/home" class="logo">velo<span>ci</span></a>
 	    <ul class="nav-links">
 	        <li><a href="${pageContext.request.contextPath}/admin">Dashboard</a></li>
 	        <li><a href="${pageContext.request.contextPath}/admin/products">Products</a></li>
@@ -60,7 +60,7 @@ a { text-decoration: none; color: inherit; }
 					<c:otherwise>The requested record could not be found in our database. It may have been deleted or never existed.</c:otherwise>
 				</c:choose>
 			</div>
-			<a href="${pageContext.request.contextPath}/index.jsp" class="btn-back">Return to Homepage</a>
+			<a href="${pageContext.request.contextPath}/home" class="btn-back">Return to Homepage</a>
 		</div>
 	</div>
 

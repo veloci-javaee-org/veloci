@@ -30,7 +30,13 @@ public class AdminCustomerDetails extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int id = Integer.parseInt(request.getParameter("id"));
+		int id;
+		try {
+			id = Integer.parseInt(request.getParameter("id"));
+		} catch (NumberFormatException e) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid customer ID.");
+			return;
+		}
 		
 		try {
 			Customer customer = service.getCustomerById(id);
@@ -39,16 +45,16 @@ public class AdminCustomerDetails extends HttpServlet {
 			request.setAttribute("customer", customer);		
 			request.setAttribute("orders", orders);
 			
-			request.getRequestDispatcher("/views/admin/admin-customer-details.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/admin/admin-customer-details.jsp").forward(request, response);
 		}
 		catch(DBException e) {
 			e.printStackTrace();
-			request.getRequestDispatcher("/data-issue.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/errors/data-issue.jsp").forward(request, response);
 		}
 		catch(CustomerNotFoundException e) {
 			e.printStackTrace();
 			request.setAttribute("message", e.getMessage());
-			request.getRequestDispatcher("/not-found.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/errors/not-found.jsp").forward(request, response);
 		}
 	}
 
