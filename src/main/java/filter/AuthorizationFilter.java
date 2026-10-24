@@ -22,7 +22,7 @@ public class AuthorizationFilter implements Filter {
             "/login", "/signup",
             "/views/unauthorized.html", "/unauthorized.html",
             "/products", "/search", "/product-details",
-            "/logout");
+            "/logout","/not-found","/data-issue");
 
     private static final Set<String> PUBLIC_PREFIXES = Set.of(
             "/css/", "/js/", "/images/");

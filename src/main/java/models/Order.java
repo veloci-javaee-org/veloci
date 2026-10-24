@@ -2,11 +2,8 @@ package models;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-<<<<<<< HEAD
 
-=======
 import java.util.ArrayList;
->>>>>>> c3a96ca3980ab7be0c56020cb856a1afda79db7f
 import java.util.List;
 
 import enums.OrderStatus;

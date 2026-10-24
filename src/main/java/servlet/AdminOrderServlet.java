@@ -5,21 +5,20 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import models.Customer;
 import models.Order;
 import service.AdminService;
 
 import java.io.IOException;
 import java.util.List;
 
-import dao.OrderDAOImpl;
+import dao.OrderDaoImpl;
 import exceptions.DBException;
 
 
 @WebServlet("/admin/orders")
 public class AdminOrderServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private final AdminService service = new AdminService(new OrderDAOImpl(), null);
+	private final AdminService service = new AdminService(new OrderDaoImpl(), null);
        
   
     public AdminOrderServlet() {
@@ -31,7 +30,7 @@ public class AdminOrderServlet extends HttpServlet {
 		try {
 			List<Order> orders = service.getOrders();
 			request.setAttribute("orders", orders);
-			request.getRequestDispatcher("/views/admin-orders.jsp").forward(request, response);
+			request.getRequestDispatcher("/views/admin/admin-orders.jsp").forward(request, response);
 		}
 		catch(DBException e) {
 			request.setAttribute("message", e.getMessage());

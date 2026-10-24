@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 import dao.CustomerDaoImpl;
-import dao.OrderDAOImpl;
+import dao.OrderDaoImpl;
 import exceptions.DBException;
 import exceptions.CustomerNotFoundException;
 
@@ -22,7 +22,7 @@ import exceptions.CustomerNotFoundException;
 public class AdminCustomerDetails extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	private final AdminService service = new AdminService(new OrderDAOImpl(), new CustomerDaoImpl());   
+	private final AdminService service = new AdminService(new OrderDaoImpl(), new CustomerDaoImpl());   
   
     public AdminCustomerDetails() {
         super();
@@ -39,7 +39,7 @@ public class AdminCustomerDetails extends HttpServlet {
 			request.setAttribute("customer", customer);		
 			request.setAttribute("orders", orders);
 			
-			request.getRequestDispatcher("/views/admin-customer-details.jsp").forward(request, response);
+			request.getRequestDispatcher("/views/admin/admin-customer-details.jsp").forward(request, response);
 		}
 		catch(DBException e) {
 			e.printStackTrace();

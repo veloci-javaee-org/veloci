@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import dao.CustomerDao;
-import dao.OrderDAO;
+import dao.OrderDao;
 import database.DBConnection;
 import enums.OrderStatus;
 import exceptions.CustomerNotFoundException;
@@ -18,10 +18,10 @@ import models.Order;
 
 public class AdminService {
 	
-	private OrderDAO orderDao;
+	private OrderDao orderDao;
 	private CustomerDao customerDao;
 	
-	public AdminService(OrderDAO orderDao, CustomerDao customerDao) {
+	public AdminService(OrderDao orderDao, CustomerDao customerDao) {
 		this.orderDao = orderDao;
 		this.customerDao = customerDao;
 	}

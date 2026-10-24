@@ -32,7 +32,7 @@ public class AdminCustomerSevlet extends HttpServlet {
 		try {
 			List<Customer> customers = service.getCustomers();
 			request.setAttribute("customers", customers);
-			request.getRequestDispatcher("/views/admin-customers.jsp").forward(request, response);
+			request.getRequestDispatcher("/views/admin/admin-customers.jsp").forward(request, response);
 		}
 		catch(DBException e) {
 			request.setAttribute("message", e.getMessage());

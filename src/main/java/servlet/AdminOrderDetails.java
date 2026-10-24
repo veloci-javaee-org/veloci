@@ -10,7 +10,7 @@ import service.AdminService;
 
 import java.io.IOException;
 
-import dao.OrderDAOImpl;
+import dao.OrderDaoImpl;
 import enums.OrderStatus;
 import exceptions.DBException;
 import exceptions.OrderNotFoundException;
@@ -19,7 +19,7 @@ import exceptions.OrderNotFoundException;
 @WebServlet("/admin/order-details")
 public class AdminOrderDetails extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    private final AdminService service = new AdminService(new OrderDAOImpl(), null);   
+    private final AdminService service = new AdminService(new OrderDaoImpl(), null);   
 
     public AdminOrderDetails() {
         super();
@@ -33,7 +33,7 @@ public class AdminOrderDetails extends HttpServlet {
 		try {
 			Order order = service.getOrderById(id);
 			request.setAttribute("order", order);
-			request.getRequestDispatcher("/views/admin-order-details.jsp").forward(request, response);
+			request.getRequestDispatcher("/views/admin/admin-order-details.jsp").forward(request, response);
 		}
 		catch(DBException e) {
 			e.printStackTrace();
