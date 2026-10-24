@@ -43,6 +43,11 @@ public class AuthorizationFilter implements Filter {
             path = "/";
         }
 
+        if ("/".equals(path)) {
+            response.sendRedirect(request.getContextPath() + "/home");
+            return;
+        }
+
         if ("/index.jsp".equals(path)) {
             response.sendRedirect(request.getContextPath() + "/home");
             return;
